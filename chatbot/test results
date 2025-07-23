@@ -1,0 +1,520 @@
+PS C:\Users\User\Documents\djangotutorial\chatbot> python manage.py test
+
+ with New Dataset
+
+
+================================================================================
+Query: Tell me about the MSc Artificial Intelligence program
+Categories: All
+================================================================================
+
+Found 8 relevant entries:
+
+
+1. Relevance Score: 1.000
+Category: Programs - Postgraduate
+Q: What is the MSc Artificial Intelligence?
+A: The MSc Artificial Intelligence is a Postgraduate level program at APU.
+--------------------------------------------------
+
+2. Relevance Score: 1.000
+Category: Programs - Postgraduate
+Q: What is the MSc Artificial Intelligence?
+A: The MSc Artificial Intelligence is a Postgraduate level program at APU.
+--------------------------------------------------
+
+3. Relevance Score: 1.000
+Category: Programs - Postgraduate
+Q: What is the MSc Artificial Intelligence?
+A: The MSc Artificial Intelligence is a Postgraduate level program at APU.
+--------------------------------------------------
+
+4. Relevance Score: 1.000
+Category: Programs - Postgraduate
+Q: What is the MSc Artificial Intelligence?
+A: The MSc Artificial Intelligence is a Postgraduate level program at APU.
+--------------------------------------------------
+
+5. Relevance Score: 1.000
+Category: Programs - Postgraduate
+Q: What is the MSc Artificial Intelligence?
+A: The MSc Artificial Intelligence is a Postgraduate level program at APU.
+--------------------------------------------------
+
+6. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with SPM?
+A: With SPM, you can apply for the following programs:
+- Bachelor of Science (Honours) in Computer Science
+- Bachelor of Computer Science (Hons) (Artificial Intelligence)
+- Diploma in Information and Communication Technology
+- Bachelor of Science (Honours) in Computer Science (Cyber Security)
+- Bachelor of Accounting and Finance (Honours)
+- Bachelor of Science (Hons) in Software Engineering
+- Bachelor of Arts (Honours) in International Business Management
+- Bachelor of Science (Honours) in Information Technology
+- Bachelor of Science (Honours) in Actuarial Studies
+- Bachelor of Science (Honours) in Psychology
+- Foundation Programme
+- Diploma in Design and Media
+- Certificate in Information and Communication Technology
+- Foundation Programme (Engineering)
+- BA (Hons) in Industrial Design
+- Bachelor of Mechatronic Engineering with Honours
+- BA (Hons) in Digital Advertising
+- Bachelor in Banking and Finance (Hons)
+- Diploma in International Studies
+- Diploma in Business Information Technology
+- Bachelor of Arts (Honours) in Business Management
+- Bachelor of Computer Engineering with Honours
+- BSc (Hons) in Computer Games Development
+- Bachelor in Interactive Media and Immersive Technology (Honours)
+- Master of Science in Artificial Intelligence
+- MSc in Data Science and Business Analytics
+- BSc (Hons) in Multimedia Technology
+- Diploma in Business Administration
+- Diploma in Mechatronic Engineering
+- MSc in Information Technology Management
+- Master of Science in Actuarial Science
+- Bachelor of Arts (Hons) in Marketing Management
+- Bachelor of Electrical and Electronic Engineering with Honours
+- BA (Hons) in Visual Effects
+- BA (Hons) International Relations
+- Master of Business Administration
+- Bachelor of Science (Hons) in Computer Games Development
+- Diploma in Accounting
+- BA (Hons) in Human Resource Management
+- BA (Hons) in Animation
+- Diploma in Electrical and Electronic Engineering
+- Certificate in Administrative Skills
+- Master of Philosophy in Engineering
+- Bachelor of Petroleum Engineering with Honours
+- Bachelor of Mechanical Engineering with Honours
+- Bachelor of Arts (Honours) in Media and Communication Studies
+- Foundation in Computing
+- Master of Science in Computing
+- Master of Project Management
+- Master of Finance
+- Master of Science in Cyber Security
+- Master of Technology Management
+- MSc in Software Engineering
+- Doctor of Philosophy (Technology)
+- Bachelor of Arts (Honours) in Tourism Management
+- Bachelor of Financial Technology
+- Doctor of Philosophy in Engineering
+
+--------------------------------------------------
+
+7. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with O LEVEL?
+A: With O LEVEL, you can apply for the following programs:
+- Bachelor of Arts (Honours) in Business Management
+- Bachelor of Science (Honours) in Computer Science (Cyber Security)
+- Bachelor of Science (Honours) in Computer Science
+- Bachelor of Mechatronic Engineering with Honours
+- Bachelor of Science (Hons) in Software Engineering
+- Bachelor of Science (Honours) in Actuarial Studies
+- Foundation Programme (Engineering)
+- Bachelor of Computer Science (Hons) (Artificial Intelligence)
+- Foundation Programme
+- Bachelor in Banking and Finance (Hons)
+- Diploma in Information and Communication Technology
+- Diploma in International Studies
+- Diploma in Business Administration
+- BA (Hons) International Relations
+- Diploma in Business Information Technology
+- Diploma in Accounting
+- Master of Business Administration
+- Bachelor of Electrical and Electronic Engineering with Honours
+- Bachelor of Arts (Honours) in International Business Management
+- BA (Hons) in Animation
+- Bachelor of Science (Honours) in Information Technology
+- Bachelor of Arts (Honours) in Tourism Management
+- MSc in Data Science and Business Analytics
+- BSc (Hons) in Computer Games Development
+- Bachelor of Accounting and Finance (Honours)
+- Foundation in Computing
+- Bachelor of Petroleum Engineering with Honours
+- Bachelor of Arts (Hons) in Marketing Management
+- Bachelor of Mechanical Engineering with Honours
+- BA (Hons) in Industrial Design
+- Bachelor of Science (Honours) in Psychology
+- Diploma in Design and Media
+- Certificate in Information and Communication Technology
+- Bachelor in Interactive Media and Immersive Technology (Honours)
+- BA (Hons) in Digital Advertising
+- Diploma in Mechatronic Engineering
+- Master of Accounting in Forensic Analysis
+- Bachelor of Computer Engineering with Honours
+- Certificate in Administrative Skills
+- BSc (Hons) in Multimedia Technology
+- Bachelor of Science (Hons) in Computer Games Development
+- Master of Philosophy in Management
+- BA (Hons) in Human Resource Management
+- Master of Science in Artificial Intelligence
+- MSc in Global Marketing Management
+- Master of Science in Digital Marketing
+- Diploma in Electrical and Electronic Engineering
+- Bachelor of Arts (Honours) in Media and Communication Studies
+- Master of Science in Cyber Security
+- Master of Science in Digital Transformation
+- Master of Science in Computing
+- BA (Hons) in Visual Effects
+- Doctor of Philosophy in Engineering
+- Master of Finance
+- Master of Philosophy in Engineering
+- Master of Project Management
+- MSc in Information Technology Management
+- MSc in International Business Communications
+- Doctor of Philosophy (Computing)
+- Doctor of Philosophy (Technology)
+- Doctor of Philosophy (Management)
+- Bachelor of Engineering in Telecommunication Engineering with Honours
+- Master of Education in Learning Design and Technology
+- Master of Technology Management
+
+--------------------------------------------------
+
+8. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with A LEVEL?
+A: With A LEVEL, you can apply for the following programs:
+- Bachelor of Mechatronic Engineering with Honours
+- Bachelor of Science (Honours) in Computer Science (Cyber Security)
+- Bachelor of Arts (Hons) in Marketing Management
+- Master of Business Administration
+- Bachelor of Science (Honours) in Computer Science
+- Bachelor of Accounting and Finance (Honours)
+- Bachelor of Science (Hons) in Software Engineering
+- Bachelor of Science (Honours) in Psychology
+- Bachelor of Arts (Honours) in Business Management
+- Bachelor of Science (Honours) in Information Technology
+- Bachelor of Science (Honours) in Actuarial Studies
+- BA (Hons) in Animation
+- Bachelor in Banking and Finance (Hons)
+- Bachelor of Arts (Honours) in Tourism Management
+- Master of Science in Artificial Intelligence
+- BA (Hons) in Industrial Design
+- BSc (Hons) in Computer Games Development
+- Bachelor of Electrical and Electronic Engineering with Honours
+- Bachelor of Computer Science (Hons) (Artificial Intelligence)
+- BA (Hons) International Relations
+- Master of Accounting in Forensic Analysis
+- Bachelor of Computer Engineering with Honours
+- BSc (Hons) in Multimedia Technology
+- Bachelor of Arts (Honours) in Media and Communication Studies
+- Master of Science in Actuarial Science
+- BA (Hons) in Digital Advertising
+- Bachelor in Interactive Media and Immersive Technology (Honours)
+- Master of Science in Computing
+- Bachelor of Engineering in Telecommunication Engineering with Honours
+- Bachelor of Mechanical Engineering with Honours
+- MSc in Data Science and Business Analytics
+- Bachelor of Petroleum Engineering with Honours
+- Bachelor of Arts (Honours) in International Business Management
+- BA (Hons) in Visual Effects
+- Master of Education in Learning Design and Technology
+- BA (Hons) in Human Resource Management
+- Diploma in Business Administration
+- Diploma in Information and Communication Technology
+- Master of Philosophy in Engineering
+- Foundation Programme
+- Diploma in Design and Media
+- Doctor of Philosophy (Management)
+- Master of Project Management
+- Master of Science in Cyber Security
+- Master of Philosophy in Management
+- Master of Technology Management
+
+--------------------------------------------------
+
+================================================================================
+Query: What accommodation options are available near APU?
+Categories: ['Student Accommodation']
+================================================================================
+
+Found 8 relevant entries:
+
+
+1. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-J2?
+A: Accommodation at APUA-J2:
+Single room rent: RM 1333.89
+Shared room rent: RM 927.80
+--------------------------------------------------
+
+2. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-J2?
+A: Accommodation at APUA-J2:
+Single room rent: RM 1333.89
+Shared room rent: RM 927.80
+--------------------------------------------------
+
+3. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-J2?
+A: Accommodation at APUA-J2:
+Single room rent: RM 1333.89
+Shared room rent: RM 927.80
+--------------------------------------------------
+
+4. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-J1?
+A: Accommodation at APUA-J1:
+Single room rent: RM 1206.04
+Shared room rent: RM 958.18
+--------------------------------------------------
+
+5. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-J1?
+A: Accommodation at APUA-J1:
+Single room rent: RM 1206.04
+Shared room rent: RM 958.18
+--------------------------------------------------
+
+6. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-J1?
+A: Accommodation at APUA-J1:
+Single room rent: RM 1206.04
+Shared room rent: RM 958.18
+--------------------------------------------------
+
+7. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-K1?
+A: Accommodation at APUA-K1:
+Single room rent: RM 1114.29
+Shared room rent: RM 786.70
+--------------------------------------------------
+
+8. Relevance Score: 1.000
+Category: Accommodation
+Q: What accommodation is available at APUA-K1?
+A: Accommodation at APUA-K1:
+Single room rent: RM 1114.29
+Shared room rent: RM 786.70
+--------------------------------------------------
+
+================================================================================
+Query: What modules are included in the Computer Science degree?
+Categories: ['Curriculum and Modules']
+================================================================================
+
+Found 8 relevant entries:
+
+
+1. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN COMPUTER?
+A: With DEGREE IN COMPUTER, you can apply for the following programs:
+- Master of Science in Artificial Intelligence
+
+--------------------------------------------------
+
+2. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN COMPUTER?
+A: With DEGREE IN COMPUTER, you can apply for the following programs:
+- Master of Science in Artificial Intelligence
+
+--------------------------------------------------
+
+3. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN COMPUTER?
+A: With DEGREE IN COMPUTER, you can apply for the following programs:
+- Master of Science in Artificial Intelligence
+
+--------------------------------------------------
+
+4. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN COMPUTER?
+A: With DEGREE IN COMPUTER, you can apply for the following programs:
+- Master of Science in Artificial Intelligence
+
+--------------------------------------------------
+
+5. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN COMPUTER?
+A: With DEGREE IN COMPUTER, you can apply for the following programs:
+- Master of Science in Artificial Intelligence
+
+--------------------------------------------------
+
+6. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with CERTIFICATE IN COMPUTER SCIENCE ?
+A: With CERTIFICATE IN COMPUTER SCIENCE , you can apply for the following programs:
+- Diploma in Information and Communication Technology
+
+--------------------------------------------------
+
+7. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with CERTIFICATE IN COMPUTER SCIENCE ?
+A: With CERTIFICATE IN COMPUTER SCIENCE , you can apply for the following programs:
+- Diploma in Information and Communication Technology
+
+--------------------------------------------------
+
+8. Relevance Score: 1.000
+Category: Qualification Requirements
+Q: What programs can I enter with CERTIFICATE IN COMPUTER SCIENCE ?
+A: With CERTIFICATE IN COMPUTER SCIENCE , you can apply for the following programs:
+- Diploma in Information and Communication Technology
+
+--------------------------------------------------
+
+================================================================================
+Query: How long does it take to complete a Bachelor's degree?
+Categories: ['Programs and Courses']
+================================================================================
+
+Found 8 relevant entries:
+
+
+1. Relevance Score: 0.905
+Category: Qualification Requirements
+Q: What programs can I enter with BACHELOR OF LAWS?
+A: With BACHELOR OF LAWS, you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+2. Relevance Score: 0.905
+Category: Qualification Requirements
+Q: What programs can I enter with BACHELOR OF LAWS?
+A: With BACHELOR OF LAWS, you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+3. Relevance Score: 0.905
+Category: Qualification Requirements
+Q: What programs can I enter with BACHELOR OF LAWS?
+A: With BACHELOR OF LAWS, you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+4. Relevance Score: 0.905
+Category: Qualification Requirements
+Q: What programs can I enter with BACHELOR OF LAWS?
+A: With BACHELOR OF LAWS, you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+5. Relevance Score: 0.905
+Category: Qualification Requirements
+Q: What programs can I enter with BACHELOR OF LAWS?
+A: With BACHELOR OF LAWS, you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+6. Relevance Score: 0.894
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN BSC (HONS) BUSINESS INFORMATION TECHNOLOGY ?    
+A: With DEGREE IN BSC (HONS) BUSINESS INFORMATION TECHNOLOGY , you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+7. Relevance Score: 0.894
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN BSC (HONS) BUSINESS INFORMATION TECHNOLOGY ?    
+A: With DEGREE IN BSC (HONS) BUSINESS INFORMATION TECHNOLOGY , you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+8. Relevance Score: 0.894
+Category: Qualification Requirements
+Q: What programs can I enter with DEGREE IN BSC (HONS) BUSINESS INFORMATION TECHNOLOGY ?    
+A: With DEGREE IN BSC (HONS) BUSINESS INFORMATION TECHNOLOGY , you can apply for the following programs:
+- Doctor of Philosophy (Management)
+
+--------------------------------------------------
+
+================================================================================
+Query: What are the fees and admission requirements for international students in 2025?     
+Categories: ['Fees and Financial Aid', 'Admissions']
+================================================================================
+
+Found 8 relevant entries:
+
+
+1. Relevance Score: 0.927
+Category: Qualification Requirements
+Q: What programs can I enter with DIPLOMA IN INTERNATIONAL STUDIES?
+A: With DIPLOMA IN INTERNATIONAL STUDIES, you can apply for the following programs:
+- BA (Hons) International Relations
+
+--------------------------------------------------
+
+2. Relevance Score: 0.927
+Category: Qualification Requirements
+Q: What programs can I enter with DIPLOMA IN INTERNATIONAL STUDIES?
+A: With DIPLOMA IN INTERNATIONAL STUDIES, you can apply for the following programs:
+- BA (Hons) International Relations
+
+--------------------------------------------------
+
+3. Relevance Score: 0.927
+Category: Qualification Requirements
+Q: What programs can I enter with DIPLOMA IN INTERNATIONAL STUDIES?
+A: With DIPLOMA IN INTERNATIONAL STUDIES, you can apply for the following programs:
+- BA (Hons) International Relations
+
+--------------------------------------------------
+
+4. Relevance Score: 0.927
+Category: Qualification Requirements
+Q: What programs can I enter with DIPLOMA IN INTERNATIONAL STUDIES?
+A: With DIPLOMA IN INTERNATIONAL STUDIES, you can apply for the following programs:
+- BA (Hons) International Relations
+
+--------------------------------------------------
+
+5. Relevance Score: 0.927
+Category: Qualification Requirements
+Q: What programs can I enter with DIPLOMA IN INTERNATIONAL STUDIES?
+A: With DIPLOMA IN INTERNATIONAL STUDIES, you can apply for the following programs:
+- BA (Hons) International Relations
+
+--------------------------------------------------
+
+6. Relevance Score: 0.916
+Category: Programs - Diploma
+Q: What is the Diploma in International Studies?
+A: The Diploma in International Studies is a Diploma level program at APU.
+--------------------------------------------------
+
+7. Relevance Score: 0.916
+Category: Programs - Diploma
+Q: What is the Diploma in International Studies?
+A: The Diploma in International Studies is a Diploma level program at APU.
+--------------------------------------------------
+
+8. Relevance Score: 0.916
+Category: Programs - Diploma
+Q: What is the Diploma in International Studies?
+A: The Diploma in International Studies is a Diploma level program at APU.
+--------------------------------------------------
+Found 0 test(s).
+INFO:chatbot.services.realtime_speech_service:Available speech services: ['web_speech_api', 'speech_recognition']
+System check identified no issues (0 silenced).
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.000s
+
+OK

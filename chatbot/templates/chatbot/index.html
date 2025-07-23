@@ -1,0 +1,4264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APU Educational Counselor Chatbot</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            chatbg: '#f7f7f8',
+            sidebar: '#202123',
+            chatbar: '#343541',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg-main: #f7f7f8;
+      --bg-sidebar: #202123;
+      --bg-chatbar: #343541;
+      --bg-container: #fff;
+      --bg-avatar: #f7f7f8;
+      --bg-input: #fff;
+      --bg-plugin: #fff;
+      --bg-plugin-hover: #e0f2fe;
+      --bg-btn: #0ea5e9;
+      --bg-btn-hover: #0284c7;
+      --text-main: #222;
+      --text-secondary: #555;
+      --text-muted: #888;
+      --text-inverse: #fff;
+      --text-accent: #0ea5e9;
+      --border-main: #e5e7eb;
+      --border-plugin: #bae6fd;
+      --shadow-main: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg-main: #181a20;
+      --bg-sidebar: #23272f;
+      --bg-chatbar: #23272f;
+      --bg-container: #181a20;
+      --bg-avatar: #23272f;
+      --bg-input: #23272f;
+      --bg-plugin: #23272f;
+      --bg-plugin-hover: #2563eb;
+      --bg-btn: #2563eb;
+      --bg-btn-hover: #1d4ed8;
+      --text-main: #e0e6ed;
+      --text-secondary: #b6c2d1;
+      --text-muted: #8e8ea0;
+      --text-inverse: #fff;
+      --text-accent: #38bdf8;
+      --border-main: #343a46;
+      --border-plugin: #3b3d42;
+      --shadow-main: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    [data-theme="light"] {
+      --bg-main: #f7f7f8;
+      --bg-sidebar: #ffffff;
+      --bg-chatbar: #ffffff;
+      --bg-container: #ffffff;
+      --bg-avatar: #f7f7f8;
+      --bg-input: #ffffff;
+      --bg-plugin: #ffffff;
+      --bg-plugin-hover: #e0f2fe;
+      --bg-btn: #0ea5e9;
+      --bg-btn-hover: #0284c7;
+      --text-main: #1f2937;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --text-inverse: #1f2937;
+      --text-accent: #0ea5e9;
+      --border-main: #e5e7eb;
+      --border-plugin: #bae6fd;
+      --shadow-main: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    html,
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    * {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .bg-sidebar {
+      background: var(--bg-sidebar) !important;
+    }
+
+    .bg-chatbar {
+      background: var(--bg-chatbar) !important;
+    }
+
+    .bg-container {
+      background: var(--bg-container) !important;
+    }
+
+    .bg-avatar {
+      background: var(--bg-avatar) !important;
+    }
+
+    .bg-input {
+      background: var(--bg-input) !important;
+    }
+
+    .border-main {
+      border-color: var(--border-main) !important;
+    }
+
+    .shadow-main {
+      box-shadow: var(--shadow-main) !important;
+    }
+
+    .text-main {
+      color: var(--text-main) !important;
+    }
+
+    .text-secondary {
+      color: var(--text-secondary) !important;
+    }
+
+    .text-muted {
+      color: var(--text-muted) !important;
+    }
+
+    .text-inverse {
+      color: var(--text-inverse) !important;
+    }
+
+    .text-accent {
+      color: var(--text-accent) !important;
+    }
+
+    /* Sidebar */
+    #conversation-sidebar {
+      background: var(--bg-sidebar);
+      color: var(--text-secondary);
+      border-right: 1px solid var(--border-main);
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-chatbar);
+      color: var(--text-inverse);
+      border-bottom: 1px solid var(--border-main);
+    }
+
+    /* Chat container */
+    #chat-container {
+      background: var(--bg-container);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-main);
+    }
+
+    /* Avatar panel */
+    .avatar-container {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 1rem;
+    }
+
+    /* Input area */
+    .input-area,
+    .p-3.md\:p-4.border-t.border-gray-200.bg-white {
+      background: var(--bg-input) !important;
+      border-top: 1px solid var(--border-main) !important;
+    }
+
+    .input-area textarea,
+    .input-area input,
+    .p-3.md\:p-4.border-t.border-gray-200.bg-white textarea,
+    .p-3.md\:p-4.border-t.border-gray-200.bg-white input {
+      background: var(--bg-container) !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--border-main) !important;
+    }
+
+    .input-area button,
+    .p-3.md\:p-4.border-t.border-gray-200.bg-white button {
+      color: var(--text-accent) !important;
+      background: transparent;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .input-area button:hover,
+    .p-3.md\:p-4.border-t.border-gray-200.bg-white button:hover {
+      color: var(--text-inverse) !important;
+      background: var(--bg-btn-hover) !important;
+    }
+
+    .input-area .text-xs,
+    .p-3.md\:p-4.border-t.border-gray-200.bg-white .text-xs {
+      color: var(--text-muted) !important;
+    }
+
+    /* Plugins Section */
+    #plugins-section {
+      background: var(--bg-plugin);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-main);
+      padding: 1rem 0.5rem;
+    }
+
+    .plugin-btn[data-plugin="accommodation"],
+    .plugin-btn[data-plugin="facilities"] {
+      background: var(--bg-plugin) !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--border-plugin) !important;
+      box-shadow: var(--shadow-main) !important;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+    }
+
+    .plugin-btn[data-plugin="accommodation"]:hover,
+    .plugin-btn[data-plugin="facilities"]:hover {
+      background: var(--bg-plugin-hover) !important;
+      color: var(--text-inverse) !important;
+      border-color: var(--bg-btn) !important;
+    }
+
+    .plugin-btn[data-plugin="accommodation"] .text-primary-700,
+    .plugin-btn[data-plugin="accommodation"] .group-hover\:text-primary-900,
+    .plugin-btn[data-plugin="accommodation"] .text-gray-500,
+    .plugin-btn[data-plugin="accommodation"] .text-primary-300,
+    .plugin-btn[data-plugin="facilities"] .text-primary-700,
+    .plugin-btn[data-plugin="facilities"] .group-hover\:text-primary-900,
+    .plugin-btn[data-plugin="facilities"] .text-gray-500,
+    .plugin-btn[data-plugin="facilities"] .text-primary-300 {
+      color: var(--text-secondary) !important;
+    }
+
+    .plugin-btn[data-plugin="accommodation"] .group-hover\:bg-primary-200,
+    .plugin-btn[data-plugin="facilities"] .group-hover\:bg-primary-200 {
+      background: var(--bg-btn) !important;
+    }
+
+    .plugin-btn[data-plugin="accommodation"] img,
+    .plugin-btn[data-plugin="facilities"] img,
+    .plugin-btn[data-plugin="accommodation"] svg,
+    .plugin-btn[data-plugin="facilities"] svg {
+      filter: brightness(1.2) contrast(1.2);
+    }
+
+    /* Theme toggle button */
+    .theme-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-accent);
+      cursor: pointer;
+      border-radius: 50%;
+      padding: 0.5rem;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bg-btn-hover);
+      color: var(--text-inverse);
+    }
+
+    /* Voice, upload, TTS buttons - ChatGPT/Copilot style */
+    #voice-input-btn,
+    #upload-btn,
+    #toggle-tts-btn {
+      color: var(--text-muted);
+      background: transparent;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      position: relative;
+      transition: all 0.15s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    #voice-input-btn:hover,
+    #upload-btn:hover,
+    #toggle-tts-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-plugin-hover);
+    }
+
+    [data-theme="dark"] #voice-input-btn:hover,
+    [data-theme="dark"] #upload-btn:hover,
+    [data-theme="dark"] #toggle-tts-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    #voice-input-btn:active,
+    #upload-btn:active,
+    #toggle-tts-btn:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+    }
+
+    /* Recording state - subtle ChatGPT style */
+    #voice-input-btn.text-red-500 {
+      color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    #voice-input-btn.text-red-500:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* TTS enabled state */
+    #toggle-tts-btn #tts-status-icon.text-primary-600 {
+      color: var(--text-accent) !important;
+    }
+
+    #toggle-tts-btn:has(#tts-status-icon.text-primary-600) {
+      color: var(--text-accent);
+    }
+
+    #toggle-tts-btn:has(#tts-status-icon.text-primary-600):hover {
+      background: rgba(14, 165, 233, 0.1);
+      color: var(--text-accent);
+    }
+
+    /* Upload dropdown styling - ChatGPT/Copilot style */
+    .upload-dropdown {
+      background: var(--bg-container) !important;
+      border: 1px solid var(--border-main) !important;
+      box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    [data-theme="dark"] .upload-dropdown {
+      background: var(--bg-container) !important;
+      border: 1px solid var(--border-main) !important;
+      box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.2),
+        0 2px 4px -1px rgba(0, 0, 0, 0.12);
+    }
+
+    .upload-option-btn {
+      border-radius: 0.375rem;
+      margin: 0.125rem;
+      transition: background-color 0.15s ease;
+      border: none;
+    }
+
+    .upload-option-btn:hover {
+      background: var(--bg-plugin-hover) !important;
+    }
+
+    [data-theme="dark"] .upload-option-btn:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .upload-option-btn:hover svg {
+      color: var(--text-main);
+    }
+
+    /* Remove hardcoded light backgrounds in dark mode */
+    [data-theme="dark"] .bg-white,
+    [data-theme="dark"] .bg-gray-50 {
+      background: var(--bg-plugin) !important;
+    }
+
+    [data-theme="dark"] .text-gray-500,
+    [data-theme="dark"] .text-gray-400 {
+      color: var(--text-secondary) !important;
+    }
+
+    /* Fix plugin buttons for dark theme */
+    [data-theme="dark"] .plugin-btn {
+      background: var(--bg-plugin) !important;
+      border-color: var(--border-plugin) !important;
+      color: var(--text-main) !important;
+    }
+
+    [data-theme="dark"] .plugin-btn:hover {
+      background: var(--bg-plugin-hover) !important;
+      border-color: var(--bg-btn) !important;
+    }
+
+    [data-theme="dark"] .plugin-btn .text-primary-700,
+    [data-theme="dark"] .plugin-btn .text-primary-300,
+    [data-theme="dark"] .plugin-btn .text-gray-500 {
+      color: var(--text-secondary) !important;
+    }
+
+    [data-theme="dark"] .plugin-btn:hover .text-primary-700,
+    [data-theme="dark"] .plugin-btn:hover .text-primary-300,
+    [data-theme="dark"] .plugin-btn:hover .text-gray-500,
+    [data-theme="dark"] .plugin-btn:hover .text-primary-600 {
+      color: var(--text-inverse) !important;
+    }
+
+    /* Fix for primary color overrides in dark theme */
+    [data-theme="dark"] .border-primary-200,
+    [data-theme="dark"] .border-primary-500 {
+      border-color: var(--border-plugin) !important;
+    }
+
+    [data-theme="dark"] .bg-primary-50,
+    [data-theme="dark"] .bg-primary-100,
+    [data-theme="dark"] .bg-primary-200 {
+      background-color: var(--bg-plugin-hover) !important;
+    }
+
+    [data-theme="dark"] .hover\:bg-primary-50:hover,
+    [data-theme="dark"] .hover\:bg-primary-200:hover {
+      background-color: var(--bg-plugin-hover) !important;
+    }
+
+    [data-theme="dark"] .hover\:border-primary-500:hover {
+      border-color: var(--bg-btn) !important;
+    }
+
+    [data-theme="dark"] .group-hover\:text-primary-900,
+    [data-theme="dark"] .group-hover\:text-primary-600 {
+      color: var(--text-inverse) !important;
+    }
+
+    /* Stop button styling */
+    #stop-btn {
+      color: #ef4444 !important;
+      background: transparent;
+      transition: all 0.15s ease;
+      border: none;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      position: relative;
+    }
+
+    #stop-btn:hover {
+      color: #dc2626 !important;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    #stop-btn:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+    }
+
+    /* Pulsing effect during typing */
+    #stop-btn.typing-active {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+      }
+    }
+
+    /* Typewriter cursor effect */
+    #typing-text::after {
+      content: '|';
+      color: var(--text-accent);
+      animation: blink 1s infinite;
+      margin-left: 1px;
+    }
+
+    @keyframes blink {
+
+      0%,
+      50% {
+        opacity: 1;
+      }
+
+      51%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Enhanced chat bubble styles */
+    .message-bubble {
+      position: relative;
+      animation: fadeIn 0.3s ease-out;
+      transition: all 0.2s ease;
+    }
+
+    .message-bubble:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* User message bubbles - right aligned with blue gradient */
+    .chat-message .flex.justify-end .message-bubble {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Bot message bubbles - left aligned with white background */
+    .chat-message .flex.justify-start .message-bubble {
+      background: white;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Dark theme adjustments */
+    [data-theme="dark"] .chat-message .flex.justify-start .message-bubble {
+      background: var(--bg-chatbar);
+      color: var(--text-main);
+      border: 1px solid var(--border-main);
+    }
+
+    [data-theme="dark"] .message-bubble code {
+      background: var(--bg-main);
+      color: var(--text-accent);
+    }
+
+    /* Timestamp styling */
+    .timestamp {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .chat-message:hover .timestamp {
+      opacity: 1;
+    }
+
+    /* Date separator styling */
+    .date-separator {
+      margin: 1.5rem 0;
+    }
+
+    .date-separator>div {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      border: 1px solid #d1d5db;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #6b7280;
+    }
+
+    [data-theme="dark"] .date-separator>div {
+      background: linear-gradient(135deg, var(--bg-chatbar) 0%, var(--bg-main) 100%);
+      border: 1px solid var(--border-main);
+      color: var(--text-muted);
+    }
+
+    /* Enhanced text styling in messages */
+    .message-content strong {
+      font-weight: 700;
+    }
+
+    .message-content em {
+      font-style: italic;
+    }
+
+    .message-content code {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.875rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    /* Animation for message appearance */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Typing indicator enhancement */
+    .typing-indicator {
+      animation: pulse 1.5s ease-in-out infinite alternate;
+    }
+
+    /* Message content styling for readability */
+    .message-content {
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .message-content p {
+      margin: 0;
+    }
+
+    .message-content br+br {
+      display: block;
+      content: "";
+      margin-top: 0.5rem;
+    }
+
+    /* Enhanced suggestion buttons */
+    .suggestion-btn {
+      background: white;
+      border: 1px solid #e5e7eb;
+      transition: all 0.2s ease;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    .suggestion-btn:hover {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-color: #3b82f6;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+    [data-theme="dark"] .suggestion-btn {
+      background: var(--bg-chatbar);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    [data-theme="dark"] .suggestion-btn:hover {
+      background: var(--bg-plugin-hover);
+      border-color: var(--text-accent);
+    }
+
+    /* Mobile responsiveness for bubbles */
+    @media (max-width: 768px) {
+      .chat-message .max-w-xs {
+        max-width: 85%;
+      }
+
+      .chat-message .w-full {
+        width: 100%;
+      }
+
+      .message-bubble {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+      }
+
+      #chat-container {
+        padding: 1rem;
+      }
+    }
+
+    /* Rounded corners, shadows, and responsiveness remain */
+
+    /* Theme Button Styles */
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-main);
+      background: var(--bg-container);
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      background: var(--bg-plugin-hover);
+    }
+
+    .theme-btn.active {
+      background: var(--bg-accent);
+      color: white;
+      border-color: var(--bg-accent);
+    }
+
+    .theme-btn.active svg {
+      color: white;
+    }
+
+    /* Notification Styles */
+    .form-checkbox {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border-main);
+      background: var(--bg-container);
+      transition: all 0.2s;
+    }
+
+    .form-checkbox:checked {
+      background: var(--bg-accent);
+      border-color: var(--bg-accent);
+    }
+
+    /* Select Styles */
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+    }
+
+    /* Modal Animation Styles */
+    #settings-modal {
+      backdrop-filter: blur(4px);
+    }
+
+    #settings-modal .bg-container {
+      transition: transform 0.2s ease-out;
+    }
+
+    /* Theme buttons in settings */
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-main);
+      background: var(--bg-container);
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      background: var(--bg-plugin-hover);
+    }
+
+    .theme-btn.active {
+      background: var(--bg-btn);
+      color: var(--text-inverse);
+      border-color: var(--bg-btn);
+    }
+
+    .theme-btn.active svg {
+      stroke: var(--text-inverse);
+    }
+
+    /* Add these styles in the CSS section */
+    .conversation-title {
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .conversation-title.editing {
+      background: var(--bg-container);
+      outline: none;
+      border-radius: 4px;
+      padding: 0 4px;
+      min-width: 60px;
+    }
+
+    .conversation-title.editing:focus {
+      box-shadow: 0 0 0 2px var(--bg-btn);
+    }
+
+    /* Add styles for delete confirmation dialog */
+    .delete-confirm-dialog {
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-container);
+      border: 1px solid var(--border-main);
+      border-radius: 6px;
+      padding: 4px;
+      margin-right: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .delete-confirm-dialog.show {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .delete-confirm-dialog button {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .delete-confirm-dialog .confirm-delete-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .delete-confirm-dialog .confirm-delete-btn:hover {
+      background: #dc2626;
+    }
+
+    .delete-confirm-dialog .cancel-delete-btn {
+      background: var(--bg-btn);
+      color: var(--text-inverse);
+    }
+
+    .delete-confirm-dialog .cancel-delete-btn:hover {
+      background: var(--bg-btn-hover);
+    }
+
+    /* Add animation for dialog */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+      }
+    }
+
+    .delete-confirm-dialog.show {
+      animation: slideIn 0.2s ease-out;
+    }
+  </style>
+  <link rel="stylesheet" href="/static/chatbot/avatar/avatar.css">
+</head>
+
+<body data-theme="light" class="font-sans h-screen flex flex-col">
+  <!-- Main Container -->
+  <div class="flex h-screen overflow-hidden">
+    <!-- Left Sidebar - Conversation History -->
+    <div id="conversation-sidebar" class="hidden md:flex md:w-64 bg-sidebar text-secondary flex-col h-full border-main">
+      <!-- New Chat Button -->
+      <div class="p-3 border-b border-main">
+        <button id="new-chat-btn"
+          class="w-full flex items-center justify-start space-x-2 bg-sidebar hover:bg-container transition-colors rounded p-3 text-left text-main">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z"
+              clip-rule="evenodd" />
+          </svg>
+          <span>New chat</span>
+        </button>
+        <!-- Search Chat -->
+        <div class="mt-3 relative">
+          <input id="search-chat" type="text" placeholder="Search chat..."
+            class="w-full pl-10 pr-3 py-3 rounded bg-container border border-main text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition text-base text-left" />
+          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent pointer-events-none"
+            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Plugins Section -->
+      <div id="plugins-section" class="p-3 border-b border-main bg-plugin">
+        <div class="mb-3 flex items-center space-x-2">
+          <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M13.828 21a4 4 0 01-5.656 0l-4.95-4.95a4 4 0 010-5.656l9.9-9.9a4 4 0 015.656 0l4.95 4.95a4 4 0 010 5.656l-9.9 9.9z" />
+          </svg>
+          <span class="uppercase tracking-wider text-sm font-bold text-accent">Plugins</span>
+        </div>
+        <button
+          class="plugin-btn group w-full flex items-center space-x-3 bg-white hover:bg-primary-50 border border-primary-200 hover:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-lg rounded-xl p-3 mb-3 focus:outline-none"
+          data-plugin="accommodation">
+          <div class="flex-shrink-0 bg-primary-100 group-hover:bg-primary-200 rounded-full p-2 transition">
+            <img src="/static/chatbot/icons/accommodation.png" class="h-7 w-7 rounded" alt="Accommodation" />
+          </div>
+          <div class="flex flex-col items-start text-left">
+            <span
+              class="font-semibold text-primary-700 group-hover:text-primary-900 text-base whitespace-nowrap">Accommodation</span>
+            <span class="text-xs text-gray-500 group-hover:text-primary-600">See rooms & options</span>
+          </div>
+          <svg class="ml-auto h-5 w-5 text-primary-300 group-hover:text-primary-600 transition" fill="none"
+            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <button
+          class="plugin-btn group w-full flex items-center space-x-3 bg-white hover:bg-primary-50 border border-primary-200 hover:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-lg rounded-xl p-3 focus:outline-none"
+          data-plugin="facilities">
+          <div class="flex-shrink-0 bg-primary-100 group-hover:bg-primary-200 rounded-full p-2 transition">
+            <img src="/static/chatbot/icons/facilities.png" class="h-7 w-7 rounded" alt="Facilities" />
+          </div>
+          <div class="flex flex-col items-start text-left">
+            <span
+              class="font-semibold text-primary-700 group-hover:text-primary-900 text-sm whitespace-nowrap">Facilities</span>
+            <span class="text-xs text-gray-500 group-hover:text-primary-600">Discover Campus</span>
+          </div>
+          <svg class="ml-auto h-5 w-5 text-primary-300 group-hover:text-primary-600 transition" fill="none"
+            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Conversations List -->
+      <div id="conversations-list" class="flex-1 overflow-y-auto py-2 px-2 space-y-1">
+        <!-- Recent conversations will be added here -->
+        <div class="conversation-btn active rounded p-2 flex items-center cursor-pointer bg-container text-main">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          <span class="text-sm truncate">Current Session</span>
+        </div>
+      </div>
+
+      <!-- User Info -->
+      <div class="p-3 border-t border-main bg-container">
+        <button id="user-options-btn" class="w-full transition-all duration-200 hover:bg-plugin-hover rounded-lg"
+          onclick="toggleUserOptions()">
+          <div class="flex items-center justify-between p-2">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center transform transition-transform duration-200 hover:scale-105"
+                style="background-color: var(--bg-btn)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20"
+                  fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-main">{{ user_full_name|default:"User" }}</span>
+            </div>
+            <!-- Add dropdown arrow -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-main transition-transform duration-200"
+              id="user-dropdown-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+        <!-- User options dropdown -->
+        <div id="user-options"
+          class="hidden mt-2 w-full bg-container rounded-lg shadow-lg border border-main transform transition-all duration-200 opacity-0 scale-95">
+          <button onclick="openSettings()"
+            class="w-full px-4 py-2 text-left text-sm text-main hover:bg-plugin-hover flex items-center transition-colors duration-200 rounded-t-lg group">
+            <svg xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 text-main group-hover:text-accent transition-colors duration-200" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="group-hover:text-accent transition-colors duration-200">Settings</span>
+          </button>
+          <button onclick="handleLogout()"
+            class="w-full px-4 py-2 text-left text-sm text-main hover:bg-plugin-hover flex items-center transition-colors duration-200 rounded-b-lg group">
+            <svg xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 text-main group-hover:text-accent transition-colors duration-200" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span class="group-hover:text-accent transition-colors duration-200">Logout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings Modal -->
+      <div id="settings-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div
+          class="bg-container rounded-2xl shadow-xl w-full max-w-md mx-4 transform scale-95 transition-transform duration-200">
+          <!-- Modal Header -->
+          <div class="flex items-center justify-between p-6 border-b border-main">
+            <h3 class="text-xl font-semibold text-main">Settings</h3>
+            <button onclick="closeSettings()" class="text-secondary hover:text-main transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <!-- Modal Content -->
+          <div class="p-6">
+            <!-- Theme Settings -->
+            <div class="mb-6">
+              <h4 class="text-sm font-medium text-main mb-3">Theme</h4>
+              <div class="flex items-center space-x-4">
+                <button onclick="setTheme('light')" class="theme-btn" data-theme="light">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  <span>Light</span>
+                </button>
+                <button onclick="setTheme('dark')" class="theme-btn" data-theme="dark">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                  <span>Dark</span>
+                </button>
+              </div>
+            </div>
+            <!-- Notification Settings -->
+            <div class="mb-6">
+              <h4 class="text-sm font-medium text-main mb-3">Notifications</h4>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="emailNotifications" class="form-checkbox text-accent rounded border-main">
+                <span class="text-sm text-main">Email Notifications</span>
+              </label>
+            </div>
+            <!-- Language Settings -->
+            <div class="mb-6">
+              <h4 class="text-sm font-medium text-main mb-3">Language</h4>
+              <select id="language"
+                class="w-full px-3 py-2 border border-main rounded-lg bg-container text-main focus:outline-none focus:ring-2 focus:ring-accent">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+              </select>
+            </div>
+          </div>
+          <!-- Modal Footer -->
+          <div class="flex justify-end space-x-3 p-6 border-t border-main">
+            <button onclick="closeSettings()"
+              class="px-4 py-2 text-sm text-main hover:bg-plugin-hover rounded-lg transition-colors duration-200">
+              Cancel
+            </button>
+            <button onclick="saveSettings()"
+              class="px-4 py-2 text-sm text-inverse rounded-lg transition-colors duration-200"
+              style="background-color: var(--bg-btn)" onmouseover="this.style.backgroundColor = 'var(--bg-btn-hover)'"
+              onmouseout="this.style.backgroundColor = 'var(--bg-btn)'">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden">
+      <!-- Header -->
+      <header class="bg-chatbar text-inverse p-3 md:p-4 flex items-center justify-between border-b border-main">
+        <button id="sidebar-toggle"
+          class="md:hidden flex items-center justify-center text-secondary hover:text-inverse">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h1 class="text-lg font-semibold text-center flex-1">APU Educational Counselor</h1>
+        <button id="theme-toggle" class="theme-toggle-btn" title="Toggle theme">
+          <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <!-- Default: moon icon -->
+            <path id="theme-toggle-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />
+          </svg>
+        </button>
+        <div class="w-6 md:hidden"></div>
+      </header>
+
+      <!-- Chat Area -->
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Main Chat -->
+        <div class="flex-1 flex flex-col">
+          <!-- Chat Messages Container -->
+          <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-2 bg-container text-main">
+            <!-- Initial welcome message -->
+            <div class="chat-message mb-4">
+              <div class="flex max-w-4xl mx-auto justify-start">
+                <div
+                  class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white flex-shrink-0 mr-3 shadow-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </div>
+
+                <div class="flex flex-col w-full">
+                  <div class="relative">
+                    <div
+                      class="bg-white text-gray-800 border border-gray-200 rounded-2xl rounded-bl-md shadow-sm px-4 py-3 message-bubble">
+                      <div class="message-content">
+                        👋 I'm <strong class="font-bold text-blue-600">Gigi</strong>, your <strong
+                          class="font-bold text-blue-600">APU</strong> Educational Counselor. How can I assist you
+                        today?
+                      </div>
+                    </div>
+
+                    <!-- Message tail/pointer -->
+                    <div class="absolute left-0 bottom-0">
+                      <div class="w-0 h-0 border-r-8 border-r-white border-t-8 border-t-transparent"></div>
+                    </div>
+                  </div>
+
+                  <!-- Timestamp -->
+                  <div class="text-xs text-gray-500 mt-1 text-left px-2">
+                    <span class="timestamp" id="welcome-timestamp"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Chat messages will be appended here -->
+          </div>
+
+          <!-- Input Area -->
+          <div class="p-3 md:p-4 border-t border-main bg-input">
+            <div class="max-w-4xl mx-auto relative">
+              <form id="chat-form"
+                class="flex items-end bg-input border border-main rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-accent focus-within:border-accent">
+                <textarea id="user-input" rows="1" placeholder="Type your message..."
+                  class="flex-1 resize-none py-3 px-4 border-none focus:ring-0 focus:outline-none rounded-lg max-h-52 bg-container text-main"></textarea>
+
+                <!-- Voice input button -->
+                <button id="voice-input-btn" type="button" class="p-2 text-accent hover:text-main" title="Voice input">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z" />
+                  </svg>
+                </button>
+
+                <!-- File upload button -->
+                <div class="relative flex items-center">
+                  <button id="upload-btn" type="button" class="p-2 text-accent hover:text-main relative"
+                    title="Upload file">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                  </button>
+                  <!-- Upload options dropdown -->
+                  <div id="upload-options"
+                    class="hidden absolute z-10 bottom-full right-0 mb-2 w-48 bg-container rounded-lg shadow-lg border border-main upload-dropdown">
+                    <button type="button" onclick="document.getElementById('photoInput').click()"
+                      class="upload-option-btn w-full px-4 py-2 text-left text-sm text-main hover:bg-plugin-hover flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Upload Photo
+                    </button>
+                    <button type="button" onclick="document.getElementById('fileInput').click()"
+                      class="upload-option-btn w-full px-4 py-2 text-left text-sm text-main hover:bg-plugin-hover flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                      Upload File
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Stop button (hidden by default) -->
+                <button id="stop-btn" type="button" class="hidden p-2 text-red-500 hover:text-red-700"
+                  title="Stop generating">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10h6v4H9z" />
+                  </svg>
+                </button>
+
+                <!-- Send button -->
+                <button id="send-btn" type="submit" class="p-2 text-accent hover:text-main disabled:text-muted">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </button>
+              </form>
+
+              <!-- Hidden file inputs -->
+              <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+              <input type="file" id="fileInput" class="hidden" onchange="handleFileUpload(event)">
+
+              <div class="flex items-center justify-between mt-2">
+                <p class="text-xs text-secondary text-center flex-1">
+                  APU Educational Counselor can make mistakes. Consider checking important information.
+                </p>
+
+                <!-- Speech controls -->
+                <div class="flex space-x-2">
+                  <button id="toggle-tts-btn" class="text-xs flex items-center text-secondary hover:text-accent">
+                    <span id="tts-status-icon" class="mr-1 text-muted">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      </svg>
+                    </span>
+                    <span>TTS</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Voice recording indicator (hidden by default) -->
+              <div id="voice-indicator"
+                class="hidden mt-2 p-2 bg-plugin-hover text-accent rounded-lg text-sm text-center animate-pulse">
+                Recording... Click again to stop
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Avatar Section -->
+        <div class="hidden lg:block w-[480px] bg-avatar border-l border-main p-8 flex items-center justify-center">
+          <div class="h-full flex flex-col items-center justify-center">
+            <div class="avatar-container">
+              <img id="avatar-img" src="/static/chatbot/avatar/avatar_eyesopen_mouthclose.png" alt="Avatar"
+                class="avatar" style="object-fit: contain;">
+            </div>
+            <p class="text-secondary font-medium mt-2 text-xl">APU Counselor</p>
+            <p class="text-sm text-muted mt-1">Your Educational Guide</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat script -->
+  <script>
+    // Authentication and user context
+    const USER_ID = '{{ user_id }}';
+    const AUTH_REQUIRED = {% if auth_required %}true{% else %} false{% endif %};
+
+    // JWT Token management for iframe authentication
+    let JWT_TOKEN = null;
+
+    // Get token from URL parameters if available
+    const urlParams = new URLSearchParams(window.location.search);
+    JWT_TOKEN = urlParams.get('token');
+
+    // Listen for authentication messages from parent window (for iframe)
+    window.addEventListener('message', function (event) {
+      if (event.origin !== 'http://localhost:3000') return; // Only accept from Next.js app
+
+      if (event.data.type === 'AUTH_TOKEN') {
+        JWT_TOKEN = event.data.token;
+        console.log('Received JWT token from parent window');
+      }
+    });
+
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const chatForm = document.getElementById('chat-form');
+    const newChatBtn = document.getElementById('new-chat-btn');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const conversationSidebar = document.getElementById('conversation-sidebar');
+    const conversationsList = document.getElementById('conversations-list');
+
+    // Store chat history
+    let chatHistory = [];
+    let conversations = [];
+    let currentConversationId = null;
+    let lastLoadedConversationId = null;
+    let isDirty = false;
+    let currentAbortController = null;
+    let currentTypingTimeout = null;
+    let isTyping = false;
+    let currentSuggestions = []; // Track current suggestions
+
+    // Toggle user options dropdown
+    function toggleUserOptions() {
+      const userOptions = document.getElementById('user-options');
+      const dropdownArrow = document.getElementById('user-dropdown-arrow');
+
+      if (userOptions.classList.contains('hidden')) {
+        // Show dropdown
+        userOptions.classList.remove('hidden');
+        // Trigger animation after unhiding
+        setTimeout(() => {
+          userOptions.classList.remove('opacity-0', 'scale-95');
+          userOptions.classList.add('opacity-100', 'scale-100');
+          dropdownArrow.classList.add('rotate-180');
+        }, 0);
+      } else {
+        // Hide dropdown with animation
+        userOptions.classList.remove('opacity-100', 'scale-100');
+        userOptions.classList.add('opacity-0', 'scale-95');
+        dropdownArrow.classList.remove('rotate-180');
+        // Hide after animation
+        setTimeout(() => {
+          userOptions.classList.add('hidden');
+        }, 200);
+      }
+
+      // Close user options when clicking outside
+      const handleClickOutside = (event) => {
+        const userOptionsBtn = document.getElementById('user-options-btn');
+        if (!userOptionsBtn.contains(event.target) && !userOptions.contains(event.target)) {
+          // Hide dropdown with animation
+          userOptions.classList.remove('opacity-100', 'scale-100');
+          userOptions.classList.add('opacity-0', 'scale-95');
+          dropdownArrow.classList.remove('rotate-180');
+          setTimeout(() => {
+            userOptions.classList.add('hidden');
+          }, 200);
+          document.removeEventListener('click', handleClickOutside);
+        }
+      };
+
+      if (!userOptions.classList.contains('hidden')) {
+        // Add click outside listener with a small delay to avoid immediate trigger
+        setTimeout(() => {
+          document.addEventListener('click', handleClickOutside);
+        }, 0);
+      }
+    }
+
+    // Auto-resize textarea
+    userInput.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+      // Limit to 5 lines max
+      if (this.scrollHeight > 200) {
+        this.style.height = '200px';
+      }
+    });
+
+    // Toggle sidebar on mobile
+    sidebarToggle.addEventListener('click', function () {
+      conversationSidebar.classList.toggle('hidden');
+    });
+
+    // Create new chat
+    newChatBtn.addEventListener('click', function () {
+      // Stop any ongoing generation or typing
+      stopGeneration();
+
+      // Clear chat area and start a new conversation
+      chatHistory = [];
+      currentConversationId = null;
+      lastLoadedConversationId = null;
+      isDirty = false;
+      currentSuggestions = []; // Reset suggestions for new chat
+      while (chatContainer.children.length > 1) {
+        chatContainer.removeChild(chatContainer.lastChild);
+      }
+      updateConversationsList();
+      userInput.focus();
+
+      // Show initial suggestions when starting a new chat
+      const initialSuggestions = [
+        "Tell me about APU's programs",
+        "Help me choose the right course",
+        "What are the admission requirements?",
+        "Information about scholarships and fees",
+        "Tell me about campus life"
+      ];
+      displaySuggestions(initialSuggestions);
+    });
+
+    // Note: saveCurrentConversation is no longer needed as messages are saved immediately via API
+    function saveCurrentConversation() {
+      // Messages are now saved immediately when sent via the chat API
+      // This function is kept for compatibility but does nothing
+      isDirty = false;
+    }
+
+    async function loadConversation(id) {
+      // Stop any ongoing generation or typing
+      stopGeneration();
+
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+
+        // Add JWT token if available (for iframe mode)
+        if (JWT_TOKEN) {
+          headers['Authorization'] = `Bearer ${JWT_TOKEN}`;
+        }
+
+        // Get CSRF token for Django session authentication
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+          headers['X-CSRFToken'] = csrfToken;
+        }
+
+        const response = await fetch(`/api/conversations/${id}/`, {
+          method: 'GET',
+          headers: headers,
+          credentials: 'same-origin' // Include cookies for Django session auth
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const conversation = data.conversation;
+
+          currentConversationId = id;
+          lastLoadedConversationId = id;
+
+          // Convert API message format to local format
+          chatHistory = conversation.messages.map(msg => ({
+            sender: msg.sender === 'assistant' ? 'bot' : msg.sender,
+            text: msg.content
+          }));
+
+          isDirty = false;
+
+          // Clear chat container except for welcome message
+          while (chatContainer.children.length > 1) {
+            chatContainer.removeChild(chatContainer.lastChild);
+          }
+
+          // Add messages to UI (without typewriter effect for loaded conversations)
+          chatHistory.forEach(msg => {
+            displayMessage(msg.text, msg.sender);
+          });
+
+          updateConversationsList();
+
+          // Clear suggestions when loading conversations - let fresh interactions generate new ones
+          const existingSuggestions = document.querySelectorAll('.chat-suggestions');
+          existingSuggestions.forEach(suggestion => suggestion.remove());
+          currentSuggestions = [];
+        } else {
+          console.error('Failed to load conversation:', response.status);
+        }
+      } catch (error) {
+        console.error('Error loading conversation:', error);
+      }
+    }
+
+    function updateConversationsList() {
+      // Clear list except for the first item (new chat)
+      while (conversationsList.children.length > 1) {
+        conversationsList.removeChild(conversationsList.lastChild);
+      }
+
+      // Mark current active
+      const activeConversation = conversationsList.querySelector('.conversation-btn');
+      if (activeConversation) {
+        activeConversation.classList.toggle('active', conversations.length === 0);
+      }
+
+      // Add conversations
+      conversations.forEach(conv => {
+        const item = document.createElement('div');
+        item.className = `conversation-btn rounded p-2 flex items-center cursor-pointer bg-container text-main ${conv.id === currentConversationId ? 'active' : ''}`;
+        item.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          <span class="conversation-title text-sm truncate flex-1" data-id="${conv.id}">${conv.title}</span>
+          <button class="rename-conv-btn ml-2 p-1 text-gray-400 hover:text-blue-600" title="Rename conversation" data-id="${conv.id}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </button>
+          <div class="relative">
+            <button class="delete-conv-btn ml-1 p-1 text-gray-400 hover:text-red-600" title="Delete conversation" data-id="${conv.id}">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div class="delete-confirm-dialog">
+              <button class="confirm-delete-btn">Delete</button>
+              <button class="cancel-delete-btn">Cancel</button>
+            </div>
+          </div>
+        `;
+
+        // Add event listeners for delete functionality
+        const deleteBtn = item.querySelector('.delete-conv-btn');
+        const deleteDialog = item.querySelector('.delete-confirm-dialog');
+        const confirmDeleteBtn = deleteDialog.querySelector('.confirm-delete-btn');
+        const cancelDeleteBtn = deleteDialog.querySelector('.cancel-delete-btn');
+
+        // Show delete confirmation
+        deleteBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          // Hide any other open delete dialogs
+          document.querySelectorAll('.delete-confirm-dialog.show').forEach(dialog => {
+            if (dialog !== deleteDialog) {
+              dialog.classList.remove('show');
+            }
+          });
+          deleteDialog.classList.add('show');
+        });
+
+        // Confirm delete
+        confirmDeleteBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          deleteConversation(conv.id);
+          deleteDialog.classList.remove('show');
+        });
+
+        // Cancel delete
+        cancelDeleteBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          deleteDialog.classList.remove('show');
+        });
+
+        // Hide delete dialog when clicking outside
+        document.addEventListener('click', function (e) {
+          if (!deleteDialog.contains(e.target) && !deleteBtn.contains(e.target)) {
+            deleteDialog.classList.remove('show');
+          }
+        });
+
+        // Add event listeners
+        const titleSpan = item.querySelector('.conversation-title');
+        const renameBtn = item.querySelector('.rename-conv-btn');
+
+        // Make title editable on rename button click
+        renameBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          titleSpan.contentEditable = true;
+          titleSpan.focus();
+
+          // Select all text
+          const range = document.createRange();
+          range.selectNodeContents(titleSpan);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+
+          // Add editing class for styling
+          titleSpan.classList.add('editing');
+        });
+
+        // Handle title editing
+        titleSpan.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            this.contentEditable = false;
+            const newTitle = this.textContent.trim();
+            if (newTitle) {
+              renameConversation(Number(this.dataset.id), newTitle);
+            } else {
+              // If empty, revert to original title
+              updateConversationsList();
+            }
+            this.classList.remove('editing');
+          } else if (e.key === 'Escape') {
+            // Cancel editing on Escape
+            this.contentEditable = false;
+            updateConversationsList();
+            this.classList.remove('editing');
+          }
+        });
+
+        // Save on blur
+        titleSpan.addEventListener('blur', function () {
+          this.contentEditable = false;
+          const newTitle = this.textContent.trim();
+          if (newTitle) {
+            renameConversation(Number(this.dataset.id), newTitle);
+          } else {
+            // If empty, revert to original title
+            updateConversationsList();
+          }
+          this.classList.remove('editing');
+        });
+
+        // Prevent click event when editing
+        titleSpan.addEventListener('click', function (e) {
+          if (this.contentEditable === 'true') {
+            e.stopPropagation();
+          }
+        });
+
+        item.addEventListener('click', () => loadConversation(conv.id));
+        conversationsList.appendChild(item);
+      });
+    }
+
+    async function renameConversation(id, newTitle) {
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+
+        // Add JWT token if available (for iframe mode)
+        if (JWT_TOKEN) {
+          headers['Authorization'] = `Bearer ${JWT_TOKEN}`;
+        }
+
+        // Get CSRF token for Django session authentication
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+          headers['X-CSRFToken'] = csrfToken;
+        }
+
+        const response = await fetch(`/api/conversations/${id}/rename/`, {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify({ title: newTitle }),
+          credentials: 'same-origin' // Include cookies for Django session auth
+        });
+
+        if (response.ok) {
+          // Update local conversations list
+          const conv = conversations.find(c => c.id === id);
+          if (conv) {
+            conv.title = newTitle;
+          }
+          updateConversationsList();
+        } else {
+          console.error('Failed to rename conversation:', response.status);
+        }
+      } catch (error) {
+        console.error('Error renaming conversation:', error);
+      }
+    }
+
+    async function deleteConversation(id) {
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+
+        // Add JWT token if available (for iframe mode)
+        if (JWT_TOKEN) {
+          headers['Authorization'] = `Bearer ${JWT_TOKEN}`;
+        }
+
+        // Get CSRF token for Django session authentication
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+          headers['X-CSRFToken'] = csrfToken;
+        }
+
+        const response = await fetch(`/api/conversations/${id}/delete/`, {
+          method: 'DELETE',
+          headers: headers,
+          credentials: 'same-origin' // Include cookies for Django session auth
+        });
+
+        if (response.ok) {
+          // Remove from local conversations list
+          conversations = conversations.filter(c => c.id !== id);
+          updateConversationsList();
+
+          // Clear chat if the deleted conversation was active
+          if (currentConversationId === id) {
+            chatHistory = [];
+            currentConversationId = null;
+            while (chatContainer.children.length > 1) {
+              chatContainer.removeChild(chatContainer.lastChild);
+            }
+
+            // Show initial suggestions for new conversation
+            const initialSuggestions = [
+              "Tell me about APU's programs",
+              "Help me choose the right course",
+              "What are the admission requirements?",
+              "Information about scholarships and fees",
+              "Tell me about campus life"
+            ];
+            displaySuggestions(initialSuggestions);
+          }
+        } else {
+          console.error('Failed to delete conversation:', response.status);
+        }
+      } catch (error) {
+        console.error('Error deleting conversation:', error);
+      }
+    }
+
+    // Display message in chat container with modern bubble design
+    function displayMessage(text, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-message mb-4';
+
+      // Get current timestamp
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const dateStr = now.toLocaleDateString();
+
+      // Enhanced text processing for better formatting
+      const processedText = formatMessageText(text);
+
+      // Create bubble-style layout
+      const messageHTML = `
+        <div class="flex max-w-4xl mx-auto ${sender === 'user' ? 'justify-end' : 'justify-start'}">
+          ${sender === 'bot' ? `
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white flex-shrink-0 mr-3 shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+            </div>
+          ` : ''}
+          
+          <div class="flex flex-col ${sender === 'user' ? 'max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl' : 'w-full'}">
+            <div class="relative">
+              <div class="
+                ${sender === 'user'
+          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl rounded-br-md'
+          : 'bg-white text-gray-800 border border-gray-200 rounded-2xl rounded-bl-md shadow-sm'
+        } 
+                px-4 py-3 message-bubble
+              ">
+                <div class="message-content">
+                  ${processedText}
+                </div>
+              </div>
+              
+              <!-- Message tail/pointer -->
+              <div class="absolute ${sender === 'user' ? 'right-0 bottom-0' : 'left-0 bottom-0'}">
+                <div class="
+                  ${sender === 'user'
+          ? 'w-0 h-0 border-l-8 border-l-blue-600 border-t-8 border-t-transparent'
+          : 'w-0 h-0 border-r-8 border-r-white border-t-8 border-t-transparent'
+        }
+                "></div>
+              </div>
+            </div>
+            
+            <!-- Timestamp -->
+            <div class="text-xs text-gray-500 mt-1 ${sender === 'user' ? 'text-right' : 'text-left'} px-2">
+              <span class="timestamp">${timeStr}</span>
+              <span class="date-info hidden" data-date="${dateStr}"></span>
+            </div>
+          </div>
+          
+          ${sender === 'user' ? `
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white flex-shrink-0 ml-3 shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      msgDiv.innerHTML = messageHTML;
+      chatContainer.appendChild(msgDiv);
+
+      // Add date separator if needed
+      addDateSeparatorIfNeeded();
+
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Format message text with enhanced styling
+    function formatMessageText(text) {
+      try {
+        return text
+          // Bold text: **text** or __text__
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-current">$1</strong>')
+          .replace(/__(.*?)__/g, '<strong class="font-bold text-current">$1</strong>')
+
+          // Italic text: *text* or _text_
+          .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+          .replace(/_(.*?)_/g, '<em class="italic">$1</em>')
+
+          // Code snippets: `code`
+          .replace(/`(.*?)`/g, '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">$1</code>')
+
+          // Line breaks
+          .replace(/\n/g, '<br>')
+
+          // Highlight important keywords
+          .replace(/\b(important|note|remember|warning|attention)\b/gi, '<span class="font-semibold text-yellow-600">$1</span>')
+
+          // APU-specific highlights
+          .replace(/\b(APU|Asia Pacific University)\b/g, '<strong class="font-bold">$1</strong>')
+
+          // Only highlight percentages, not regular numbers to avoid conflicts
+          .replace(/\b(\d+(?:\.\d+)?%)\b/g, '<span class="font-semibold text-purple-600">$1</span>');
+      } catch (error) {
+        console.error('Error formatting message text:', error);
+        // Return the original text if formatting fails
+        return text;
+      }
+    }
+
+    // Add date separators for better organization
+    function addDateSeparatorIfNeeded() {
+      const messages = chatContainer.querySelectorAll('.chat-message');
+      if (messages.length < 2) return;
+
+      const currentMsg = messages[messages.length - 1];
+      const previousMsg = messages[messages.length - 2];
+
+      const currentDate = currentMsg.querySelector('.date-info')?.getAttribute('data-date');
+      const previousDate = previousMsg.querySelector('.date-info')?.getAttribute('data-date');
+
+      if (currentDate && previousDate && currentDate !== previousDate) {
+        const separator = document.createElement('div');
+        separator.className = 'date-separator flex justify-center my-4';
+        separator.innerHTML = `
+          <div class="bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium shadow-sm">
+            ${currentDate}
+          </div>
+        `;
+        chatContainer.insertBefore(separator, currentMsg);
+      }
+    }
+
+    function appendMessage(text, sender) {
+      // Add to chat history
+      chatHistory.push({ sender, text });
+
+      if (sender === 'bot') {
+        // Use typewriter effect for bot messages (TTS is now handled within typewriter)
+        console.log('📝 Displaying bot message with integrated TTS and typewriter');
+        displayMessageWithTypewriter(text, sender);
+      } else {
+        // Display user messages immediately
+        displayMessage(text, sender);
+      }
+      isDirty = true;
+    }
+
+    function displayMessageWithTypewriter(text, sender) {
+      isTyping = true;
+
+      // Add pulsing effect to stop button during typing
+      stopBtn.classList.add('typing-active');
+      stopBtn.title = 'Stop typing';
+
+      // Create the message container with bubble styling
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-message mb-4';
+
+      // Get current timestamp
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const dateStr = now.toLocaleDateString();
+
+      const messageHTML = `
+        <div class="flex max-w-4xl mx-auto justify-start">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white flex-shrink-0 mr-3 shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </div>
+          
+          <div class="flex flex-col w-full">
+            <div class="relative">
+              <div class="bg-white text-gray-800 border border-gray-200 rounded-2xl rounded-bl-md shadow-sm px-4 py-3 message-bubble">
+                <div class="message-content" id="typing-text"></div>
+              </div>
+              
+              <!-- Message tail/pointer -->
+              <div class="absolute left-0 bottom-0">
+                <div class="w-0 h-0 border-r-8 border-r-white border-t-8 border-t-transparent"></div>
+              </div>
+            </div>
+            
+            <!-- Timestamp -->
+            <div class="text-xs text-gray-500 mt-1 text-left px-2">
+              <span class="timestamp">${timeStr}</span>
+              <span class="date-info hidden" data-date="${dateStr}"></span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      msgDiv.innerHTML = messageHTML;
+      chatContainer.appendChild(msgDiv);
+
+      const textElement = msgDiv.querySelector('#typing-text');
+      let currentIndex = 0;
+      let typewriterDelay = 50; // Initial delay, will be adjusted dynamically
+      let ttsStartTime = null;
+
+      // Start TTS with dynamic synchronization (avatar will start when TTS starts)
+      if (isTtsEnabled) {
+        console.log('🔊 Starting TTS with dynamic typewriter synchronization');
+        startTTSWithDynamicSync(text, textElement);
+      } else {
+        // If TTS is disabled, don't start avatar talking since there's no speech
+        console.log('📝 TTS disabled - starting typewriter only (no avatar talking)');
+        typewriterDelay = 5; // Lightning fast when no TTS
+        startTypewriter();
+      }
+
+      function startTTSWithDynamicSync(ttsText, textEl) {
+        if (!('speechSynthesis' in window)) {
+          startTypewriter();
+          return;
+        }
+
+        // Cancel any ongoing speech
+        if (synth.speaking) {
+          synth.cancel();
+        }
+
+        const utterance = new SpeechSynthesisUtterance(ttsText);
+
+        // Apply natural speaking configuration
+        const ttsConfig = window.avatarController ? window.avatarController.getTTSConfig() : {
+          speed: 1.4,
+          voice: { gender: "female", preset: "en-US-Wavenet-F" }
+        };
+
+        utterance.lang = 'en-US';
+        utterance.rate = ttsConfig.speed;
+        utterance.pitch = 1.2;
+
+        // Voice selection
+        const voices = speechSynthesis.getVoices();
+        const preferredVoice = voices.find(voice =>
+          voice.name.includes('Wavenet') && voice.lang === 'en-US' && voice.name.toLowerCase().includes('f')
+        ) || voices.find(voice =>
+          voice.lang === 'en-US' && (voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman'))
+        ) || voices.find(voice =>
+          voice.lang === 'en-US' && (voice.name.toLowerCase().includes('zira') || voice.name.toLowerCase().includes('eva'))
+        ) || voices.find(voice => voice.lang === 'en-US');
+
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        utterance.onstart = () => {
+          console.log('🔊 TTS started - measuring actual duration for dynamic sync');
+          ttsStartTime = Date.now();
+
+          // Start avatar talking now that TTS has actually started
+          if (window.avatarController) {
+            console.log('🔊 TTS started - starting avatar talking');
+            window.avatarController.startTalking();
+            if (typeof window.avatarController.setTalkingState === 'function') {
+              window.avatarController.setTalkingState(true);
+            }
+          }
+
+          // Start typewriter now that TTS has actually started
+          startTypewriter();
+        };
+
+        utterance.onend = () => {
+          const actualDuration = Date.now() - ttsStartTime;
+          console.log(`🔊 TTS finished after ${actualDuration}ms - forcing typewriter to complete`);
+
+          // Force typewriter to finish immediately
+          finishTypewriterImmediately();
+
+          // Stop avatar
+          if (window.avatarController) {
+            console.log('🔊 TTS finished - stopping avatar');
+            window.avatarController.stopTalking();
+            if (typeof window.avatarController.setTalkingState === 'function') {
+              window.avatarController.setTalkingState(false);
+            }
+          }
+        };
+
+        utterance.onerror = (event) => {
+          console.error('🔊 TTS error:', event.error);
+          finishTypewriterImmediately();
+          if (window.avatarController) {
+            window.avatarController.stopTalking();
+          }
+        };
+
+        // Start speaking
+        synth.speak(utterance);
+      }
+
+      function startTypewriter() {
+        // Calculate initial delay based on estimated TTS duration (lightning fast)
+        const estimatedDuration = calculateTTSDuration(text, 1.4);
+        typewriterDelay = Math.max(1, estimatedDuration / text.length * 0.2); // 80% faster
+
+        console.log(`📝 Starting typewriter with dynamic adjustment, initial delay: ${typewriterDelay}ms per character`);
+
+        typeNextCharacter();
+      }
+
+      function typeNextCharacter() {
+        if (currentIndex < text.length && isTyping) {
+          // Add the next character
+          const currentText = text.substring(0, currentIndex + 1);
+          textElement.innerHTML = formatMessageText(currentText);
+
+          currentIndex++;
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+
+          // Dynamic adjustment: if TTS started, continuously adjust timing
+          if (ttsStartTime && isTtsEnabled) {
+            const elapsed = Date.now() - ttsStartTime;
+            const remainingChars = text.length - currentIndex;
+
+            if (remainingChars > 0) {
+              // Estimate how much time TTS has left and adjust delay accordingly (lightning fast)
+              const estimatedTotalDuration = calculateTTSDuration(text, 1.4);
+              const estimatedRemaining = Math.max(50, estimatedTotalDuration - elapsed);
+              typewriterDelay = Math.max(0.5, (estimatedRemaining / remainingChars) * 0.15); // 85% faster
+            }
+          }
+
+          // Continue typing with adjusted delay
+          currentTypingTimeout = setTimeout(typeNextCharacter, typewriterDelay);
+        } else {
+          // Typing finished naturally
+          finishTypewriter();
+        }
+      }
+
+      function finishTypewriter() {
+        isTyping = false;
+        currentTypingTimeout = null;
+        textElement.removeAttribute('id');
+        console.log('📝 Typewriter finished naturally');
+        resetUIState();
+      }
+
+      function finishTypewriterImmediately() {
+        if (isTyping) {
+          isTyping = false;
+          currentTypingTimeout = null;
+
+          // Show complete text immediately
+          textElement.innerHTML = formatMessageText(text);
+          textElement.removeAttribute('id');
+          console.log('📝 Typewriter forced to finish - showing complete text');
+          resetUIState();
+        }
+      }
+
+      // Start the process
+      // TTS will start typewriter when it's ready, or start immediately if TTS is disabled
+      if (!isTtsEnabled) {
+        startTypewriter();
+      }
+    }
+
+    // Calculate expected TTS duration based on text length and speech rate
+    function calculateTTSDuration(text, speechRate = 1.4) {
+      // Average speaking rate is about 4-5 characters per second at normal speed (1.0)
+      // At speechRate 1.4, it's about 6-7 characters per second
+      const baseCharsPerSecond = 5; // Conservative estimate
+      const adjustedCharsPerSecond = baseCharsPerSecond * speechRate;
+      const durationSeconds = text.length / adjustedCharsPerSecond;
+
+      // Add some buffer for punctuation pauses and natural speech patterns
+      const bufferMultiplier = 1.2;
+      return Math.max(1000, durationSeconds * 1000 * bufferMultiplier); // At least 1 second, in milliseconds
+    }
+
+    function getTypingDelay(character) {
+      // This function is now replaced by the synchronized timing in displayMessageWithTypewriter
+      // Keeping it for backward compatibility but it won't be used in the new synchronized approach
+      const ttsSpeed = window.avatarController ? window.avatarController.getTTSConfig().speed : 1.4;
+      const baseDelay = 60; // Base delay for characters
+
+      // Adjust timing based on TTS speed to keep them synchronized
+      const adjustedBaseDelay = baseDelay / ttsSpeed;
+
+      // Vary typing speed based on character type for more natural feel
+      if (character === '.' || character === '!' || character === '?') {
+        return Math.max(150, adjustedBaseDelay * 2); // Longer pause after sentence endings
+      } else if (character === ',' || character === ';' || character === ':') {
+        return Math.max(100, adjustedBaseDelay * 1.5); // Medium pause after punctuation
+      } else if (character === ' ') {
+        return Math.max(30, adjustedBaseDelay * 0.5); // Short pause after spaces
+      } else if (character === '\n') {
+        return Math.max(200, adjustedBaseDelay * 3); // Longer pause for line breaks
+      } else {
+        // Faster, more consistent timing for regular characters
+        return Math.max(20, adjustedBaseDelay + Math.random() * 20);
+      }
+    }
+
+    function stopTypewriter() {
+      if (currentTypingTimeout) {
+        clearTimeout(currentTypingTimeout);
+        currentTypingTimeout = null;
+      }
+      isTyping = false;
+
+      // Stop any ongoing TTS
+      if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+
+      // Immediately stop avatar talking when user clicks stop
+      if (window.avatarController) {
+        window.avatarController.stopTalking();
+        if (typeof window.avatarController.setTalkingState === 'function') {
+          window.avatarController.setTalkingState(false);
+        }
+        // Force avatar to stop talking immediately
+        if (typeof window.avatarController.forceStopTalking === 'function') {
+          window.avatarController.forceStopTalking();
+        }
+      }
+
+      // Complete any partial text immediately
+      const typingElement = document.getElementById('typing-text');
+      if (typingElement) {
+        typingElement.removeAttribute('id');
+      }
+    }
+
+    function showTypingIndicator() {
+      const indicator = document.createElement('div');
+      indicator.className = 'chat-message typing-indicator mb-4';
+      indicator.innerHTML = `
+        <div class="flex max-w-4xl mx-auto justify-start">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white flex-shrink-0 mr-3 shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </div>
+          
+          <div class="flex flex-col w-full">
+            <div class="relative">
+              <div class="bg-white text-gray-800 border border-gray-200 rounded-2xl rounded-bl-md shadow-sm px-4 py-3 message-bubble">
+                <div class="message-content">
+                  <span class="text-gray-500">💭 Thinking...</span>
+                </div>
+              </div>
+              
+              <!-- Message tail/pointer -->
+              <div class="absolute left-0 bottom-0">
+                <div class="w-0 h-0 border-r-8 border-r-white border-t-8 border-t-transparent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      chatContainer.appendChild(indicator);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // Don't start avatar talking here - wait for actual typewriter to begin
+      // Avatar will start talking when displayMessageWithTypewriter begins
+
+      return indicator;
+    }
+
+    function removeTypingIndicator(indicator) {
+      if (indicator && indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
+      // Avatar continues talking - don't stop it here since response is starting
+    }
+
+
+
+    function displaySuggestions(suggestions) {
+      // Remove any existing suggestions
+      const existingSuggestions = document.querySelectorAll('.chat-suggestions');
+      existingSuggestions.forEach(suggestion => suggestion.remove());
+
+      if (!suggestions || suggestions.length === 0) {
+        currentSuggestions = [];
+        return;
+      }
+
+      // Store current suggestions for persistence
+      currentSuggestions = [...suggestions];
+
+      // Create suggestions container
+      const suggestionsDiv = document.createElement('div');
+      suggestionsDiv.className = 'chat-suggestions mb-4';
+
+      const suggestionsHTML = `
+        <div class="flex max-w-4xl mx-auto">
+          <div class="w-8 h-8 flex-shrink-0 mr-4"></div>
+          <div class="flex flex-col space-y-2 w-full">
+            <p class="text-sm text-muted font-medium mb-2">💡 Suggested questions:</p>
+            <div class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+              ${suggestions.map((suggestion, index) => `
+                <button 
+                  class="suggestion-btn text-left p-3 rounded-lg border border-main bg-container hover:bg-plugin-hover hover:border-plugin transition-all duration-200 text-sm"
+                  data-suggestion="${suggestion.replace(/"/g, '&quot;')}"
+                  onclick="selectSuggestion(this)"
+                >
+                  <span class="text-accent">•</span> ${suggestion}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      suggestionsDiv.innerHTML = suggestionsHTML;
+      chatContainer.appendChild(suggestionsDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function selectSuggestion(button) {
+      const suggestion = button.getAttribute('data-suggestion');
+      if (suggestion) {
+        userInput.value = suggestion;
+        userInput.focus();
+
+        // Optional: Auto-send the suggestion
+        sendMessage();
+
+        // Remove suggestions after selection
+        const suggestionsContainer = button.closest('.chat-suggestions');
+        if (suggestionsContainer) {
+          suggestionsContainer.remove();
+          currentSuggestions = []; // Clear stored suggestions
+        }
+      }
+    }
+
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      // Don't send if already generating
+      if (currentAbortController) return;
+
+      // Reset textarea height
+      userInput.style.height = 'auto';
+
+      appendMessage(text, 'user');
+      userInput.value = '';
+
+      // Show stop button and hide send button
+      sendBtn.classList.add('hidden');
+      stopBtn.classList.remove('hidden');
+      stopBtn.title = 'Stop generating';
+
+      // Create abort controller
+      currentAbortController = new AbortController();
+
+      const typingIndicator = showTypingIndicator();
+
+      try {
+        // Prepare headers for authentication
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+
+        // Use JWT token if available (iframe mode), otherwise use CSRF token
+        if (JWT_TOKEN) {
+          headers['Authorization'] = `Bearer ${JWT_TOKEN}`;
+        } else {
+          headers['X-CSRFToken'] = getCookie('csrftoken');
+        }
+
+        const res = await fetch('/api/chat/', {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify({
+            message: text,
+            conversation_id: currentConversationId
+          }),
+          signal: currentAbortController.signal
+        });
+
+        removeTypingIndicator(typingIndicator);
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        appendMessage(data.response || ('Error: ' + data.error), 'bot');
+
+        // Update conversation ID if provided (for new conversations)
+        if (data.conversation_id && !currentConversationId) {
+          currentConversationId = data.conversation_id;
+          // Refresh conversations list to show the new conversation
+          loadConversations();
+        }
+
+        // Display suggestions if available
+        if (data.suggestions && Array.isArray(data.suggestions)) {
+          displaySuggestions(data.suggestions);
+        } else {
+          // Clear suggestions if none received
+          currentSuggestions = [];
+        }
+
+        // Don't reset UI here if we're starting typewriter effect
+        if (!isTyping) {
+          resetUIState();
+        }
+      } catch (err) {
+        removeTypingIndicator(typingIndicator);
+
+        if (err.name === 'AbortError') {
+          appendMessage('Response generation was stopped.', 'bot');
+        } else {
+          appendMessage('Network error. Please try again.', 'bot');
+        }
+
+        // Reset UI state on error
+        resetUIState();
+      } finally {
+        // Reset abort controller
+        currentAbortController = null;
+      }
+    }
+
+    function resetUIState() {
+      sendBtn.classList.remove('hidden');
+      stopBtn.classList.add('hidden');
+      stopBtn.classList.remove('typing-active');
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function stopGeneration() {
+      if (currentAbortController) {
+        currentAbortController.abort();
+      }
+
+      // Also stop any ongoing typewriter effect
+      stopTypewriter();
+
+      // Reset UI state
+      resetUIState();
+    }
+
+    // Form submit handler
+    chatForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!currentAbortController) {
+        sendMessage();
+      }
+    });
+
+    // Click event for send button
+    sendBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      sendMessage();
+    });
+
+    // Click event for stop button
+    stopBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      stopGeneration();
+    });
+
+    // Enter key to send (but allow shift+enter for new line)
+    userInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (!currentAbortController) {
+          sendMessage();
+        }
+      }
+      // Escape key to stop generation
+      if (e.key === 'Escape' && currentAbortController) {
+        e.preventDefault();
+        stopGeneration();
+      }
+    });
+
+    // Load conversations from API
+    async function loadConversations() {
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+
+        // Add JWT token if available (for iframe mode)
+        if (JWT_TOKEN) {
+          headers['Authorization'] = `Bearer ${JWT_TOKEN}`;
+        }
+
+        // Get CSRF token for Django session authentication
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+          headers['X-CSRFToken'] = csrfToken;
+        }
+
+        const response = await fetch('/api/conversations/', {
+          method: 'GET',
+          headers: headers,
+          credentials: 'same-origin' // Include cookies for Django session auth
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          conversations = data.conversations || [];
+          updateConversationsList();
+        } else {
+          console.error('Failed to load conversations:', response.status);
+          conversations = [];
+          updateConversationsList();
+        }
+      } catch (error) {
+        console.error('Error loading conversations:', error);
+        conversations = [];
+        updateConversationsList();
+      }
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', async () => {
+      userInput.focus();
+
+      // Wait for JWT token to be available (for iframe)
+      const waitForToken = () => {
+        return new Promise((resolve) => {
+          if (JWT_TOKEN) {
+            resolve();
+            return;
+          }
+
+          // Check every 100ms for JWT token
+          const checkToken = () => {
+            if (JWT_TOKEN) {
+              resolve();
+            } else {
+              setTimeout(checkToken, 100);
+            }
+          };
+          checkToken();
+        });
+      };
+
+      // Always try to load conversations and initialize theme
+      await loadConversations();
+      await initializeTheme();
+
+      // If JWT token is available (iframe mode), wait for it
+      if (window.location.search.includes('token=') || JWT_TOKEN) {
+        await waitForToken();
+        // Reload conversations with JWT token if needed
+        await loadConversations();
+      }
+
+      // Set welcome message timestamp
+      const welcomeTimestamp = document.getElementById('welcome-timestamp');
+      if (welcomeTimestamp) {
+        const now = new Date();
+        welcomeTimestamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+
+      // Show initial suggestions for new users
+      const initialSuggestions = [
+        "Tell me about APU's programs",
+        "Help me choose the right course",
+        "What are the admission requirements?",
+        "Information about scholarships and fees",
+        "Tell me about campus life"
+      ];
+      displaySuggestions(initialSuggestions);
+
+      // Add beforeunload event listener to stop TTS and avatar
+      window.addEventListener('beforeunload', function () {
+        // Stop TTS and avatar
+        if (window.speechSynthesis && window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+        }
+        if (window.avatarController) {
+          window.avatarController.stopTalking();
+          if (typeof window.avatarController.setTalkingState === 'function') {
+            window.avatarController.setTalkingState(false);
+          }
+          if (typeof window.avatarController.forceStopTalking === 'function') {
+            window.avatarController.forceStopTalking();
+          }
+        }
+      });
+    });
+
+    // Speech functionality
+    const voiceInputBtn = document.getElementById('voice-input-btn');
+    const toggleTtsBtn = document.getElementById('toggle-tts-btn');
+    const ttsStatusIcon = document.getElementById('tts-status-icon');
+    const voiceIndicator = document.getElementById('voice-indicator');
+
+    // Speech synthesis variables
+    const synth = window.speechSynthesis;
+    let isTtsEnabled = true;
+    let isListening = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+
+    // Text-to-Speech functionality
+    function setupTextToSpeech() {
+      toggleTtsBtn.addEventListener('click', function () {
+        isTtsEnabled = !isTtsEnabled;
+
+        console.log('🔊 TTS toggled:', isTtsEnabled ? 'ENABLED' : 'DISABLED');
+
+        // Update the icon color to indicate status
+        if (isTtsEnabled) {
+          ttsStatusIcon.classList.remove('text-gray-400');
+          ttsStatusIcon.classList.add('text-primary-600');
+          // No test speech - TTS will work when needed
+
+        } else {
+          ttsStatusIcon.classList.remove('text-primary-600');
+          ttsStatusIcon.classList.add('text-gray-400');
+
+          // Stop any ongoing speech
+          if (synth.speaking) {
+            synth.cancel();
+          }
+        }
+      });
+
+      // Initialize TTS button state (TTS is enabled by default)
+      if (isTtsEnabled) {
+        ttsStatusIcon.classList.remove('text-gray-400');
+        ttsStatusIcon.classList.add('text-primary-600');
+        console.log('🔊 TTS initialized as ENABLED by default');
+      }
+    }
+
+    // Function to speak text with immediate Web Speech API (no delays)
+    function speakText(text) {
+      if (!isTtsEnabled) return;
+
+      console.log('🔊 Starting TTS immediately with Web Speech API');
+      console.log('🔊 TTS Enabled:', isTtsEnabled);
+      console.log('🔊 Speech Synthesis Available:', 'speechSynthesis' in window);
+
+      // Start immediately with Web Speech API (no API delays)
+      if ('speechSynthesis' in window) {
+        // Cancel any ongoing speech
+        if (synth.speaking) {
+          synth.cancel();
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Apply natural speaking configuration from avatar controller
+        const ttsConfig = window.avatarController ? window.avatarController.getTTSConfig() : {
+          speed: 1.4,
+          voice: { gender: "female", preset: "en-US-Wavenet-F" }
+        };
+
+        utterance.lang = 'en-US';
+        utterance.rate = ttsConfig.speed; // Much faster speaking speed (1.4) to match typewriter
+        utterance.pitch = 1.2; // Slightly higher pitch for more feminine sound
+
+        // Try to use a natural-sounding female voice with enhanced selection
+        const voices = speechSynthesis.getVoices();
+        console.log('🔊 Available voices:', voices.length);
+
+        const preferredVoice = voices.find(voice =>
+          voice.name.includes('Wavenet') && voice.lang === 'en-US' && voice.name.toLowerCase().includes('f')
+        ) || voices.find(voice =>
+          voice.lang === 'en-US' && (voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman'))
+        ) || voices.find(voice =>
+          voice.lang === 'en-US' && (voice.name.toLowerCase().includes('zira') || voice.name.toLowerCase().includes('eva'))
+        ) || voices.find(voice =>
+          voice.lang === 'en-US' && voice.name.toLowerCase().includes('f')
+        ) || voices.find(voice => voice.lang === 'en-US');
+
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+          console.log('🔊 Selected voice:', preferredVoice.name);
+        } else {
+          console.log('🔊 Using default voice');
+        }
+
+        // Avatar is already talking, TTS just takes over control
+        utterance.onstart = () => {
+          console.log('🔊 TTS started successfully');
+          if (window.avatarController) {
+            // Avatar is already talking from typing indicator, just ensure continuity
+            console.log('🔊 Web Speech API TTS started - avatar continues talking');
+          }
+        };
+
+        utterance.onend = () => {
+          console.log('🔊 TTS finished');
+          if (window.avatarController) {
+            // Only stop avatar if TTS is finished AND typewriter is finished
+            if (!isTyping) {
+              console.log('🔊 Web Speech API TTS finished - stopping avatar');
+              window.avatarController.stopTalking();
+              if (typeof window.avatarController.setTalkingState === 'function') {
+                window.avatarController.setTalkingState(false);
+              }
+            } else {
+              console.log('🔊 Web Speech API TTS finished but typewriter still active');
+            }
+          }
+        };
+
+        utterance.onerror = (event) => {
+          console.error('🔊 TTS error:', event.error);
+          if (window.avatarController && !isTyping) {
+            window.avatarController.stopTalking();
+          }
+        };
+
+        // Start speaking immediately (no delays)
+        synth.speak(utterance);
+        console.log('🔊 Web Speech API TTS started immediately');
+      }
+
+      // Try Groq TTS in parallel as enhancement (don't wait for it)
+      tryGroqTTSEnhancement(text);
+    }
+
+    // Background Groq TTS enhancement (doesn't block immediate TTS)
+    function tryGroqTTSEnhancement(text) {
+      fetch('/api/tts/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.audio_url) {
+            console.log('🎵 Groq TTS available but Web Speech already started');
+            // Could potentially switch to Groq audio for better quality
+            // But for now, Web Speech provides immediate response
+          }
+        })
+        .catch(error => {
+          console.log('📡 Groq TTS not available, using Web Speech (which already started)');
+        });
+    }
+
+    // Speech-to-Text functionality with Web Speech API + Server fallback
+    function setupSpeechToText() {
+      console.log('🔧 Setting up speech-to-text...');
+
+      // Check for MediaRecorder support
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('❌ Media devices not supported in this browser');
+        voiceInputBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        voiceInputBtn.title = 'Voice input not supported in this browser';
+        return;
+      }
+
+      // Check Web Speech API support
+      console.log('🔍 Checking Web Speech API support...');
+      console.log('   webkitSpeechRecognition:', 'webkitSpeechRecognition' in window);
+      console.log('   SpeechRecognition:', 'SpeechRecognition' in window);
+      console.log('   User Agent:', navigator.userAgent.substring(0, 100));
+
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        console.log('✅ Web Speech API available - will use real-time recognition');
+      } else {
+        console.log('⚠️ Web Speech API not available - will use server-side fallback');
+      }
+
+      voiceInputBtn.addEventListener('click', toggleRecording);
+      console.log('✅ Speech-to-text setup complete');
+    }
+
+    // Debug function to test Web Speech API directly (call from browser console)
+    window.testWebSpeechAPI = function () {
+      console.log('🧪 Testing Web Speech API directly...');
+
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        console.log('❌ Web Speech API not supported');
+        return false;
+      }
+
+      try {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = true;
+
+        recognition.onstart = () => console.log('🎙️ Test: Speech recognition started');
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          console.log('🎯 Test result:', transcript);
+        };
+        recognition.onerror = (event) => console.log('❌ Test error:', event.error);
+        recognition.onend = () => console.log('🛑 Test ended');
+
+        recognition.start();
+        console.log('✅ Web Speech API test started - speak now!');
+        return true;
+
+      } catch (error) {
+        console.log('❌ Web Speech API test failed:', error);
+        return false;
+      }
+    };
+
+    // Add to window for easy access
+    window.checkSpeechSupport = function () {
+      console.log('🔍 === SPEECH RECOGNITION SUPPORT CHECK ===');
+      console.log('Browser:', navigator.userAgent.substring(0, 80));
+      console.log('webkitSpeechRecognition:', 'webkitSpeechRecognition' in window);
+      console.log('SpeechRecognition:', 'SpeechRecognition' in window);
+      console.log('getUserMedia:', !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
+      console.log('MediaRecorder:', 'MediaRecorder' in window);
+
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        console.log('✅ Web Speech API is supported!');
+        console.log('💡 You can test it by calling: testWebSpeechAPI()');
+      } else {
+        console.log('❌ Web Speech API is NOT supported');
+        console.log('💡 Will fall back to server-side processing');
+      }
+    };
+
+    async function toggleRecording() {
+      if (isListening) {
+        // Stop recording
+        stopRecording();
+      } else {
+        // Start recording
+        await startRecording();
+      }
+    }
+
+    async function startRecording() {
+      try {
+        console.log('🎤 Starting real-time speech recognition...');
+
+        // Use Web Speech API for real-time recognition (much faster and more accurate)
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+          startWebSpeechRecognition();
+        } else {
+          // Fallback to server-side processing for unsupported browsers
+          console.log('Web Speech API not supported, falling back to server-side...');
+          startServerSideRecording();
+        }
+
+      } catch (error) {
+        console.error('Error starting recording:', error);
+        showErrorMessage('Failed to start recording: ' + error.message);
+      }
+    }
+
+    function startWebSpeechRecognition() {
+      try {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        // Configure for optimal speech recognition
+        recognition.continuous = false;  // Get one result at a time
+        recognition.interimResults = true;  // Show results as we speak
+        recognition.lang = 'en-US';
+        recognition.maxAlternatives = 1;
+
+        console.log('✅ Web Speech API initialized');
+
+        recognition.onstart = () => {
+          console.log('🎙️ Web Speech API listening started');
+          isListening = true;
+          voiceIndicator.classList.remove('hidden');
+          voiceInputBtn.classList.add('text-red-500');
+        };
+
+        recognition.onresult = (event) => {
+          let finalTranscript = '';
+          let interimTranscript = '';
+
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript;
+            } else {
+              interimTranscript += transcript;
+            }
+          }
+
+          console.log('🎯 Speech result:', finalTranscript || interimTranscript);
+
+          if (finalTranscript) {
+            // Final result - set in input field
+            userInput.value = finalTranscript.trim();
+            userInput.dispatchEvent(new Event('input'));
+            userInput.focus();
+
+            console.log('✅ Final transcription:', finalTranscript);
+            showSuccessMessage('Speech recognized successfully!');
+            stopRecording();
+          } else if (interimTranscript) {
+            // Interim result - show as placeholder or in input field
+            userInput.value = interimTranscript.trim();
+            userInput.style.opacity = '0.7'; // Visual feedback for interim results
+          }
+        };
+
+        recognition.onerror = (event) => {
+          console.error('❌ Web Speech API error:', event.error);
+
+          let errorMessage = 'Speech recognition failed';
+          switch (event.error) {
+            case 'no-speech':
+              errorMessage = 'No speech detected. Please try speaking again.';
+              break;
+            case 'audio-capture':
+              errorMessage = 'Microphone not accessible. Please check your microphone.';
+              break;
+            case 'not-allowed':
+              errorMessage = 'Microphone access denied. Please allow microphone access.';
+              break;
+            case 'network':
+              errorMessage = 'Network error. Please check your internet connection.';
+              break;
+            case 'service-not-allowed':
+              errorMessage = 'Speech recognition service not allowed.';
+              break;
+          }
+
+          showErrorMessage(errorMessage);
+          stopRecording();
+        };
+
+        recognition.onend = () => {
+          console.log('🛑 Web Speech API ended');
+          userInput.style.opacity = '1'; // Reset opacity
+          stopRecording();
+        };
+
+        // Start recognition
+        recognition.start();
+        window.currentRecognition = recognition; // Store for stopping
+
+      } catch (error) {
+        console.error('Web Speech API error:', error);
+        showErrorMessage('Speech recognition not available: ' + error.message);
+      }
+    }
+
+    async function startServerSideRecording() {
+      try {
+        console.log('🔄 Starting server-side recording (fallback)...');
+
+        // Request microphone access
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+            channelCount: 1,
+            sampleRate: 16000, // Optimal for speech recognition
+          }
+        });
+
+        const options = { audioBitsPerSecond: 128000 };
+
+        // Use WebM format for server processing
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          options.mimeType = 'audio/webm;codecs=opus';
+        } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+          options.mimeType = 'audio/webm';
+        }
+
+        mediaRecorder = new MediaRecorder(stream, options);
+        audioChunks = [];
+
+        mediaRecorder.addEventListener('dataavailable', event => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        });
+
+        mediaRecorder.addEventListener('stop', () => {
+          const audioBlob = new Blob(audioChunks, { type: options.mimeType });
+          processAudioWithServer(audioBlob);
+          stream.getTracks().forEach(track => track.stop());
+        });
+
+        mediaRecorder.start(250);
+        isListening = true;
+        voiceIndicator.classList.remove('hidden');
+        voiceInputBtn.classList.add('text-red-500');
+
+      } catch (error) {
+        console.error('Server-side recording error:', error);
+        showErrorMessage('Recording failed: ' + error.message);
+      }
+    }
+
+    function stopRecording() {
+      if (window.currentRecognition) {
+        console.log('🛑 Stopping Web Speech API...');
+        window.currentRecognition.stop();
+        window.currentRecognition = null;
+      } else if (mediaRecorder && isListening) {
+        console.log('🛑 Stopping server-side recording...');
+        mediaRecorder.stop();
+      }
+
+      isListening = false;
+      voiceIndicator.classList.add('hidden');
+      voiceInputBtn.classList.remove('text-red-500');
+      userInput.style.opacity = '1'; // Reset opacity
+    }
+
+    // Function to process audio with server-side speech recognition
+    async function processAudioWithServer(audioBlob) {
+      try {
+        console.log('Audio blob size:', audioBlob.size, 'bytes');
+        console.log('Audio blob type:', audioBlob.type);
+
+        if (audioBlob.size === 0) {
+          throw new Error('No audio data recorded');
+        }
+
+        // Show processing indicator
+        const processingIndicator = showProcessingIndicator();
+
+        // Prepare form data for Local Whisper API
+        const formData = new FormData();
+
+        // Determine file extension based on MIME type
+        let fileExtension = 'webm';
+        if (audioBlob.type.includes('mp4')) fileExtension = 'mp4';
+        else if (audioBlob.type.includes('mpeg')) fileExtension = 'mp3';
+        else if (audioBlob.type.includes('wav')) fileExtension = 'wav';
+
+        formData.append('audio', audioBlob, `recording.${fileExtension}`);
+
+        // Add optional parameters  
+        formData.append('service', 'speech_recognition'); // Use real-time speech recognition
+        formData.append('language', 'en'); // Force English for better accuracy
+
+        console.log('🔄 Sending audio to server-side speech recognition...');
+
+        const response = await fetch('/api/transcribe/', {
+          method: 'POST',
+          body: formData
+        });
+
+        console.log('📥 Server response status:', response.status);
+
+        removeProcessingIndicator(processingIndicator);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('❌ Server-side speech recognition error:', errorData);
+          throw new Error(errorData.error || `Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ Server-side transcription result:', result);
+
+        // Log additional metadata
+        if (result.detected_language) {
+          console.log('🌍 Detected language:', result.detected_language);
+        }
+        if (result.confidence) {
+          console.log('📊 Confidence score:', result.confidence);
+        }
+        if (result.service_used) {
+          console.log('🔧 Service used:', result.service_used);
+        }
+
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        const transcription = result.transcription || result.text || '';
+
+        if (!transcription.trim()) {
+          throw new Error('No speech detected in the audio');
+        }
+
+        // Set the transcribed text to the input field
+        userInput.value = transcription;
+        console.log('Transcribed text:', transcription);
+
+        // Auto resize the textarea
+        userInput.dispatchEvent(new Event('input'));
+
+        // Focus on the input field
+        userInput.focus();
+
+        // Show success message briefly
+        showSuccessMessage('Speech recognized successfully!');
+
+      } catch (error) {
+        console.error('❌ Error processing audio with server:', error);
+        showErrorMessage('Speech recognition failed: ' + error.message);
+      }
+    }
+
+    function showProcessingIndicator() {
+      const indicator = document.createElement('div');
+      indicator.className = 'processing-indicator fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center';
+      indicator.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Processing with Local Whisper...
+      `;
+      document.body.appendChild(indicator);
+      return indicator;
+    }
+
+    function removeProcessingIndicator(indicator) {
+      if (indicator && indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
+    }
+
+    function showErrorMessage(message) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+      errorDiv.textContent = message;
+      document.body.appendChild(errorDiv);
+
+      setTimeout(() => {
+        if (errorDiv.parentNode) {
+          errorDiv.parentNode.removeChild(errorDiv);
+        }
+      }, 5000);
+    }
+
+    function showSuccessMessage(message) {
+      const successDiv = document.createElement('div');
+      successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+      successDiv.textContent = message;
+      document.body.appendChild(successDiv);
+
+      setTimeout(() => {
+        if (successDiv.parentNode) {
+          successDiv.parentNode.removeChild(successDiv);
+        }
+      }, 3000);
+    }
+
+    // TTS is now handled within the typewriter effect
+    // No need for separate TTS trigger here
+
+    // Initialize speech features
+    setupTextToSpeech();
+    setupSpeechToText();
+
+    // Add debugging and testing features for speech-to-text
+    window.testSpeechToText = function () {
+      console.log('=== Speech-to-Text Debug Info ===');
+      console.log('MediaRecorder supported:', !!window.MediaRecorder);
+      console.log('getUserMedia supported:', !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
+      console.log('Current listening state:', isListening);
+      console.log('MediaRecorder state:', mediaRecorder ? mediaRecorder.state : 'null');
+      console.log('Audio chunks length:', audioChunks.length);
+
+      // Test MIME type support
+      const mimeTypes = [
+        'audio/webm;codecs=opus',
+        'audio/webm',
+        'audio/mp4',
+        'audio/mpeg',
+        'audio/wav'
+      ];
+
+      console.log('Supported MIME types:');
+      mimeTypes.forEach(type => {
+        console.log(`  ${type}: ${MediaRecorder.isTypeSupported(type)}`);
+      });
+
+      // Test microphone permissions
+      navigator.permissions.query({ name: 'microphone' }).then(function (result) {
+        console.log('Microphone permission:', result.state);
+      }).catch(e => console.log('Permission query failed:', e));
+    };
+
+    // Add a test recording function
+    window.testRecording = async function (duration = 3000) {
+      console.log(`Starting ${duration / 1000}s test recording...`);
+
+      if (isListening) {
+        console.log('Already recording, stopping first...');
+        stopRecording();
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
+      try {
+        await startRecording();
+        console.log('Test recording started successfully');
+
+        setTimeout(() => {
+          if (isListening) {
+            console.log('Stopping test recording...');
+            stopRecording();
+          }
+        }, duration);
+
+      } catch (error) {
+        console.error('Test recording failed:', error);
+      }
+    };
+
+    // Add endpoint testing
+    window.testTranscribeEndpoint = async function () {
+      console.log('Testing /api/transcribe/ endpoint (Local Whisper)...');
+
+      try {
+        // Create a small test blob (empty for endpoint test)
+        const testBlob = new Blob(['test'], { type: 'audio/wav' });
+        const formData = new FormData();
+        formData.append('audio', testBlob, 'test.wav');
+        formData.append('model_size', 'small');
+
+        const response = await fetch('/api/transcribe/', {
+          method: 'POST',
+          body: formData
+        });
+
+        console.log('Endpoint response status:', response.status);
+        console.log('Endpoint response headers:', Object.fromEntries(response.headers.entries()));
+
+        const data = await response.json();
+        console.log('Endpoint response data:', data);
+
+        if (response.ok) {
+          console.log('✅ Local Whisper endpoint is accessible');
+          if (data.model_used) {
+            console.log('🤖 Whisper model used:', data.model_used);
+          }
+        } else {
+          console.log('❌ Endpoint returned error');
+        }
+
+      } catch (error) {
+        console.error('❌ Endpoint test failed:', error);
+      }
+    };
+
+    // Add comprehensive debugging
+    window.debugSpeechToText = function () {
+      console.log('\n🔍 === COMPREHENSIVE SPEECH-TO-TEXT DEBUG ===');
+      window.testSpeechToText();
+      console.log('\n🌐 Testing transcribe endpoint...');
+      window.testTranscribeEndpoint();
+      console.log('\n📝 To test recording, run: window.testRecording(5000)');
+      console.log('💡 Check browser console for detailed logs during recording');
+    };
+
+    // Add microphone debugging function
+    window.debugMicrophone = async function () {
+      console.log('\n🎤 === MICROPHONE DEBUG ===');
+
+      // Check browser support
+      console.log('1. Browser Support:');
+      console.log('   - MediaDevices:', !!navigator.mediaDevices);
+      console.log('   - getUserMedia:', !!navigator.mediaDevices?.getUserMedia);
+      console.log('   - MediaRecorder:', !!window.MediaRecorder);
+
+      // Check permissions
+      console.log('\n2. Checking Permissions:');
+      try {
+        const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+        console.log('   - Microphone permission:', permissionStatus.state);
+      } catch (e) {
+        console.log('   - Cannot check permissions:', e.message);
+      }
+
+      // Test microphone access
+      console.log('\n3. Testing Microphone Access:');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+            channelCount: 1,
+            sampleRate: 16000
+          }
+        });
+
+        console.log('   ✅ Microphone access granted');
+        const audioTrack = stream.getAudioTracks()[0];
+        console.log('   - Audio track:', audioTrack.label);
+        console.log('   - Audio settings:', audioTrack.getSettings());
+        console.log('   - Audio constraints:', audioTrack.getConstraints());
+
+        // Test MediaRecorder
+        console.log('\n4. Testing MediaRecorder:');
+        const mimeTypes = [
+          'audio/webm;codecs=opus',
+          'audio/webm',
+          'audio/mp4',
+          'audio/mpeg',
+          'audio/wav'
+        ];
+
+        for (const mimeType of mimeTypes) {
+          const supported = MediaRecorder.isTypeSupported(mimeType);
+          console.log(`   - ${mimeType}: ${supported ? '✅' : '❌'}`);
+        }
+
+        // Stop the stream
+        stream.getTracks().forEach(track => track.stop());
+        console.log('\n✅ Microphone debug completed successfully');
+
+      } catch (error) {
+        console.error('   ❌ Microphone access failed:', error);
+
+        if (error.name === 'NotAllowedError') {
+          console.log('   💡 Solution: Allow microphone access in browser settings');
+        } else if (error.name === 'NotFoundError') {
+          console.log('   💡 Solution: Connect a microphone to your computer');
+        } else if (error.name === 'NotReadableError') {
+          console.log('   💡 Solution: Close other apps using the microphone');
+        }
+      }
+    };
+
+    // Enhanced recording test with better audio detection
+    window.testRecording = async function (duration = 3000) {
+      console.log(`\n🎙️ === RECORDING TEST (${duration}ms) ===`);
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+            channelCount: 1,
+            sampleRate: 16000
+          }
+        });
+
+        console.log('🟢 Starting recording test...');
+        console.log('📢 SPEAK NOW for the next', duration / 1000, 'seconds!');
+
+        const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+          ? 'audio/webm;codecs=opus'
+          : 'audio/webm';
+
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType,
+          audioBitsPerSecond: 128000
+        });
+
+        const audioChunks = [];
+        let hasAudioData = false;
+
+        mediaRecorder.addEventListener('dataavailable', event => {
+          if (event.data.size > 0) {
+            console.log('📊 Audio chunk:', event.data.size, 'bytes');
+            audioChunks.push(event.data);
+            hasAudioData = true;
+          }
+        });
+
+        mediaRecorder.addEventListener('stop', () => {
+          console.log('🔴 Recording stopped');
+
+          if (!hasAudioData || audioChunks.length === 0) {
+            console.error('❌ No audio data recorded');
+            console.log('💡 Possible issues:');
+            console.log('   - Microphone muted');
+            console.log('   - No speech detected');
+            console.log('   - Browser permissions');
+            stream.getTracks().forEach(track => track.stop());
+            return;
+          }
+
+          const audioBlob = new Blob(audioChunks, { type: mimeType });
+          console.log('🎵 Audio blob created:', audioBlob.size, 'bytes');
+
+          if (audioBlob.size === 0) {
+            console.error('❌ Audio blob is empty');
+          } else {
+            console.log('✅ Recording successful! Audio size:', audioBlob.size, 'bytes');
+
+            // Test transcription
+            console.log('🔄 Testing transcription...');
+            window.testTranscriptionWithBlob(audioBlob);
+          }
+
+          stream.getTracks().forEach(track => track.stop());
+        });
+
+        // Start recording
+        mediaRecorder.start(500); // Collect data every 500ms
+
+        // Stop after duration
+        setTimeout(() => {
+          if (mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+          }
+        }, duration);
+
+      } catch (error) {
+        console.error('❌ Recording test failed:', error);
+      }
+    };
+
+    // Test transcription with actual audio blob
+    window.testTranscriptionWithBlob = async function (audioBlob) {
+      try {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'test_recording.webm');
+        formData.append('model_size', 'small');
+        // Don't force whisper - let it use the best available service
+        // formData.append('service', 'speech_recognition'); // Uncomment to force specific service
+
+        console.log('📤 Sending to transcription API...');
+
+        const response = await fetch('/api/transcribe/', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        console.log('📥 Transcription result:', result);
+
+        if (result.error) {
+          console.error('❌ Transcription error:', result.error);
+        } else {
+          console.log('✅ Transcription successful:', result.transcription);
+          console.log('🎯 Service used:', result.service_used);
+          console.log('📊 Confidence:', result.confidence);
+          if (result.detected_language) {
+            console.log('🌐 Language:', result.detected_language);
+          }
+        }
+
+      } catch (error) {
+        console.error('❌ Transcription test failed:', error);
+      }
+    };
+
+    // Avatar control and debugging functions
+    window.testAvatarSpeaking = function (duration = 5000) {
+      console.log(`Testing avatar speaking for ${duration / 1000} seconds...`);
+      if (window.avatarController) {
+        window.avatarController.startTalking();
+        setTimeout(() => {
+          window.avatarController.stopTalking();
+          console.log('Avatar speaking test complete');
+        }, duration);
+      } else {
+        console.log('❌ Avatar controller not available');
+      }
+    };
+
+    window.debugAvatarController = function () {
+      console.log('\n🤖 === Avatar Controller Debug Info ===');
+      console.log('Avatar controller available:', !!window.avatarController);
+
+      if (window.avatarController) {
+        console.log('Available methods:');
+        console.log('• startTalking:', typeof window.avatarController.startTalking === 'function');
+        console.log('• stopTalking:', typeof window.avatarController.stopTalking === 'function');
+        console.log('• setTalkingState:', typeof window.avatarController.setTalkingState === 'function');
+        console.log('• ensureTalking:', typeof window.avatarController.ensureTalking === 'function');
+        console.log('• forceStopTalking:', typeof window.avatarController.forceStopTalking === 'function');
+
+        // Check current state if available
+        if (typeof window.avatarController.getCurrentState === 'function') {
+          console.log('Current state:', window.avatarController.getCurrentState());
+        }
+      }
+
+      console.log('Current typing state:', isTyping);
+      console.log('Current abort controller:', !!currentAbortController);
+    };
+
+    window.forceStopAvatar = function () {
+      console.log('Force stopping avatar...');
+      if (window.avatarController) {
+        window.avatarController.stopTalking();
+        if (typeof window.avatarController.setTalkingState === 'function') {
+          window.avatarController.setTalkingState(false);
+        }
+        if (typeof window.avatarController.forceStopTalking === 'function') {
+          window.avatarController.forceStopTalking();
+        }
+        console.log('✅ Avatar stopped');
+      } else {
+        console.log('❌ Avatar controller not available');
+      }
+    };
+
+    window.testTTSTiming = function (testText = "This is a test message to check TTS timing") {
+      console.log('🔊 Testing TTS timing...');
+      console.log('TTS enabled:', isTtsEnabled);
+
+      if (!isTtsEnabled) {
+        console.log('⚠️ TTS is disabled. Enable TTS first by clicking the TTS button.');
+        return;
+      }
+
+      console.log('Starting TTS immediately...');
+      const startTime = Date.now();
+
+      speakText(testText);
+
+      console.log(`TTS started at: ${Date.now() - startTime}ms after call`);
+      console.log('If you hear speech immediately, TTS timing is working correctly.');
+    };
+
+    window.testDynamicSynchronization = function (testText = "Testing dynamic synchronization between typewriter effect and text-to-speech with real-time adjustment") {
+      console.log('🚀 Testing dynamic synchronization...');
+      console.log('Expected behavior:');
+      console.log('1. Avatar starts talking immediately');
+      console.log('2. TTS starts and measures actual duration');
+      console.log('3. Typewriter adjusts speed dynamically during typing');
+      console.log('4. When TTS finishes, typewriter is forced to complete');
+      console.log('5. Avatar stops when both are synchronized');
+
+      console.log('Starting test...');
+      appendMessage(testText, 'bot');
+
+      console.log('✅ Test initiated. Watch the console for synchronization logs.');
+    };
+
+    window.testZeroDelayTTS = function (testText = "Testing zero delay TTS") {
+      console.log('🔊 Testing zero-delay TTS...');
+
+      if (!isTtsEnabled) {
+        console.log('⚠️ TTS is disabled. Enable TTS first.');
+        return;
+      }
+
+      const startTime = Date.now();
+      console.log('Starting TTS now...');
+
+      speakText(testText);
+
+      const delay = Date.now() - startTime;
+      console.log(`🔊 TTS call completed in: ${delay}ms`);
+      console.log('🎯 Speech should start immediately with zero network delay');
+    };
+
+    // Test different speech recognition services
+    window.testRealTimeServices = async function (audioBlob = null, duration = 3000) {
+      console.log('\n🚀 === TESTING REAL-TIME SPEECH SERVICES ===');
+
+      let testBlob = audioBlob;
+
+      if (!testBlob) {
+        console.log('🎤 No audio provided, recording for', duration / 1000, 'seconds...');
+        console.log('📢 SPEAK NOW!');
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const mediaRecorder = new MediaRecorder(stream);
+          const chunks = [];
+
+          mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+          mediaRecorder.start();
+
+          await new Promise(resolve => setTimeout(resolve, duration));
+          mediaRecorder.stop();
+
+          await new Promise(resolve => {
+            mediaRecorder.onstop = () => {
+              testBlob = new Blob(chunks, { type: 'audio/webm' });
+              stream.getTracks().forEach(track => track.stop());
+              resolve();
+            };
+          });
+
+          console.log('🎵 Recording complete, testing services...');
+        } catch (error) {
+          console.error('❌ Recording failed:', error);
+          return;
+        }
+      }
+
+      // Test all available services
+      const services = [
+        { name: 'Auto (Best Available)', value: null },
+        { name: 'Google Speech Recognition', value: 'speech_recognition' }
+      ];
+
+      console.log('\n📊 Testing Services:');
+      const results = [];
+
+      for (const service of services) {
+        console.log(`\n🔄 Testing: ${service.name}`);
+        const startTime = Date.now();
+
+        try {
+          const formData = new FormData();
+          formData.append('audio', testBlob, 'test_audio.webm');
+          if (service.value) {
+            formData.append('service', service.value);
+          }
+
+          const response = await fetch('/api/transcribe/', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+          const endTime = Date.now();
+          const duration = endTime - startTime;
+
+          if (result.success) {
+            console.log(`✅ ${service.name}: SUCCESS`);
+            console.log(`   📝 Text: "${result.transcription}"`);
+            console.log(`   🎯 Confidence: ${result.confidence?.toFixed(2) || 'N/A'}`);
+            console.log(`   ⏱️  Time: ${duration}ms`);
+            console.log(`   🔧 Service: ${result.service_used || 'Unknown'}`);
+
+            results.push({
+              service: service.name,
+              success: true,
+              text: result.transcription,
+              confidence: result.confidence || 0,
+              time: duration,
+              engine: result.service_used
+            });
+          } else {
+            console.log(`❌ ${service.name}: FAILED`);
+            console.log(`   🔥 Error: ${result.error}`);
+
+            results.push({
+              service: service.name,
+              success: false,
+              error: result.error,
+              time: duration
+            });
+          }
+        } catch (error) {
+          const endTime = Date.now();
+          const duration = endTime - startTime;
+
+          console.log(`💥 ${service.name}: EXCEPTION`);
+          console.log(`   🔥 Error: ${error.message}`);
+
+          results.push({
+            service: service.name,
+            success: false,
+            error: error.message,
+            time: duration
+          });
+        }
+      }
+
+      // Summary
+      console.log('\n📊 === RESULTS SUMMARY ===');
+      const successful = results.filter(r => r.success);
+
+      if (successful.length > 0) {
+        console.log(`✅ Successful: ${successful.length}/${results.length}`);
+
+        // Best accuracy
+        const bestAccuracy = successful.reduce((best, current) =>
+          (current.confidence > best.confidence) ? current : best
+        );
+
+        // Fastest response
+        const fastest = successful.reduce((fast, current) =>
+          (current.time < fast.time) ? current : fast
+        );
+
+        console.log(`\n🏆 Best Accuracy: ${bestAccuracy.service}`);
+        console.log(`   Text: "${bestAccuracy.text}"`);
+        console.log(`   Confidence: ${bestAccuracy.confidence.toFixed(2)}`);
+
+        console.log(`\n⚡ Fastest: ${fastest.service}`);
+        console.log(`   Time: ${fastest.time}ms`);
+        console.log(`   Text: "${fastest.text}"`);
+
+        // Check consistency
+        const uniqueTexts = new Set(successful.map(r => r.text.toLowerCase().trim()));
+        if (uniqueTexts.size === 1) {
+          console.log('\n🎯 All services produced identical results!');
+        } else {
+          console.log(`\n⚠️  ${uniqueTexts.size} different transcriptions detected`);
+        }
+      } else {
+        console.log('❌ No successful transcriptions');
+      }
+
+      return results;
+    };
+
+    // Test service availability
+    window.checkServiceAvailability = async function () {
+      console.log('\n🔍 === CHECKING SERVICE AVAILABILITY ===');
+
+      try {
+        const response = await fetch('/api/transcribe/', {
+          method: 'POST',
+          body: new FormData() // Empty request to check endpoint
+        });
+
+        console.log('✅ Transcription endpoint accessible');
+        console.log('📊 Status:', response.status);
+
+        // Check for real-time services by looking at the response
+        if (response.status === 400) {
+          console.log('✅ Server is running and accepting requests');
+        }
+
+      } catch (error) {
+        console.log('❌ Transcription endpoint error:', error);
+      }
+
+      // Check browser capabilities
+      console.log('\n🌐 Browser Capabilities:');
+      console.log('   • Web Speech API:', 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
+      console.log('   • MediaRecorder:', 'MediaRecorder' in window);
+      console.log('   • getUserMedia:', 'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices);
+
+      // Test microphone access
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        console.log('   • Microphone access: ✅ Granted');
+      } catch (error) {
+        console.log('   • Microphone access: ❌ Denied or unavailable');
+      }
+    };
+
+    // Make debug functions available globally
+    console.log('\n🎤 Speech-to-Text Debug Functions Available:');
+    console.log('• window.debugSpeechToText() - Run comprehensive debug');
+    console.log('• window.testSpeechToText() - Check browser capabilities');
+    console.log('• window.testRecording(ms) - Test recording for specified duration');
+    console.log('• window.testTranscribeEndpoint() - Test API endpoint');
+    console.log('• window.testRealTimeServices(blob, ms) - Compare all speech services');
+    console.log('• window.checkServiceAvailability() - Check service status');
+
+    console.log('\n🤖 Avatar Debug Functions Available:');
+    console.log('• window.debugAvatarController() - Check avatar controller status');
+    console.log('• window.testAvatarSpeaking(ms) - Test avatar speaking for duration');
+    console.log('• window.forceStopAvatar() - Force stop avatar talking');
+    console.log('• window.testTTSTiming() - Test TTS immediate timing');
+    console.log('• window.testImmediateResponse() - Test complete immediate response flow');
+    console.log('• window.testZeroDelayTTS() - Test zero-delay TTS (no network calls)');
+
+    // Avatar behavior control functions
+    window.updateAvatarBehavior = function (config) {
+      if (window.avatarController) {
+        window.avatarController.updateConfig(config);
+        console.log('Avatar behavior updated:', config);
+      }
+    };
+
+    window.triggerAvatarSpeaking = function (duration) {
+      if (window.avatarController) {
+        duration ? window.avatarController.triggerSpeaking(duration) : window.avatarController.startTalking();
+      }
+    };
+
+    window.stopAvatarSpeaking = function () {
+      if (window.avatarController) {
+        window.avatarController.stopSpeaking();
+      }
+    };
+
+    // Example of how to change avatar behavior at runtime:
+    // window.updateAvatarBehavior({
+    //   "avatar": {
+    //     "defaultBehavior": {
+    //       "blinking": "human-like"
+    //     },
+    //     "speakingBehavior": {
+    //       "onStart": {
+    //         "mouthAnimation": "open_half_to_full"
+    //       },
+    //       "onEnd": {
+    //         "mouthAnimation": "close"
+    //       }
+    //     }
+    //   }
+    // });
+
+    // Web Speech API will handle microphone permission automatically
+
+    // File upload handling
+    const uploadBtn = document.getElementById('upload-btn');
+    const uploadOptions = document.getElementById('upload-options');
+
+    uploadBtn.addEventListener('click', () => {
+      uploadOptions.classList.toggle('hidden');
+    });
+
+    // Close upload options when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!uploadBtn.contains(e.target) && !uploadOptions.contains(e.target)) {
+        uploadOptions.classList.add('hidden');
+      }
+    });
+
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.type.startsWith('image/')) {
+          uploadFile(file);
+        } else {
+          alert('Please select an image file');
+        }
+      }
+      event.target.value = ''; // Reset input
+      uploadOptions.classList.add('hidden');
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        uploadFile(file);
+      }
+      event.target.value = ''; // Reset input
+      uploadOptions.classList.add('hidden');
+    }
+
+    function uploadFile(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('message', `Uploading ${file.name}...`);
+
+      // Add user message to chat
+      addMessage('user', `Uploading ${file.name}...`);
+
+      fetch('/chat/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            addMessage('assistant', `Error: ${data.error}`);
+          } else {
+            addMessage('assistant', data.response);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          addMessage('assistant', 'Sorry, there was an error uploading your file.');
+        });
+    }
+
+    // Plugin interactivity for Accommodation and Facilities
+    document.querySelectorAll('.plugin-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const plugin = this.getAttribute('data-plugin');
+        if (plugin === 'accommodation') {
+          // Show the gallery
+          displayPluginGallery('Accommodation', [
+            '/static/chatbot/accommodation/acc1.jpg',
+            '/static/chatbot/accommodation/acc2.jpg',
+            '/static/chatbot/accommodation/acc3.jpg'
+          ]);
+        } else if (plugin === 'facilities') {
+          displayPluginGallery('Facilities', [
+            '/static/chatbot/facilities/fac1.jpg',
+            '/static/chatbot/facilities/fac2.jpg',
+            '/static/chatbot/facilities/fac3.jpg'
+          ]);
+        }
+      });
+    });
+
+    function displayPluginGallery(title, images) {
+      // Custom descriptions for each plugin
+      let description = '';
+      if (title === 'Accommodation') {
+        description = "Explore our comfortable and modern accommodation options. We offer on campus and off campus accommodation options!";
+      } else if (title === 'Facilities') {
+        description = "Discover the facilities available on campus, designed to support your learning and lifestyle.";
+      }
+
+      // Remove previous plugin gallery if any
+      const old = document.getElementById('plugin-gallery');
+      if (old) old.remove();
+
+      // Create gallery container
+      const gallery = document.createElement('div');
+      gallery.id = 'plugin-gallery';
+      gallery.className = 'chat-message';
+      gallery.innerHTML = `
+        <div class="flex max-w-4xl mx-auto flex-col items-start">
+          <h2 class="text-lg font-bold mb-2">${title}</h2>
+          <p class="mb-4 text-gray-600">${description}</p>
+          <div class="flex flex-wrap gap-4">
+            ${images.map(src => `<img src="${src}" class="w-40 h-32 object-cover rounded shadow" alt="${title} photo">`).join('')}
+          </div>
+        </div>
+      `;
+      chatContainer.appendChild(gallery);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Search chat functionality
+    const searchChatInput = document.getElementById('search-chat');
+    searchChatInput.addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      // Hide/show conversations based on search
+      const items = conversationsList.querySelectorAll('.conversation-btn');
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(query)) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleIcon = document.getElementById('theme-toggle-icon-path');
+    const body = document.body;
+
+    // Icons for light and dark themes
+    const moonIcon = "M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"; // Moon icon (dark mode)
+    const sunIcon = "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"; // Sun icon (light mode)
+
+    // Initialize theme from user profile or localStorage
+    async function initializeTheme() {
+      let currentTheme = 'light'; // Default theme
+
+      // First check if theme was already set by parent window (for iframe)
+      const currentBodyTheme = body.getAttribute('data-theme');
+      if (currentBodyTheme && (currentBodyTheme === 'light' || currentBodyTheme === 'dark')) {
+        console.log('Theme already set by parent window:', currentBodyTheme);
+        updateThemeIcon(currentBodyTheme);
+        updateSettingsThemeButtons(currentBodyTheme);
+        return;
+      }
+
+      // Try to load theme from user profile if authenticated
+      if (JWT_TOKEN) {
+        try {
+          const headers = {
+            'Authorization': `Bearer ${JWT_TOKEN}`,
+            'Content-Type': 'application/json'
+          };
+
+          const response = await fetch('/api/user/theme/', {
+            method: 'GET',
+            headers: headers
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            currentTheme = data.theme || 'light';
+            console.log('Loaded user theme from profile:', currentTheme);
+          } else {
+            console.log('Failed to load user theme, using localStorage fallback');
+            currentTheme = localStorage.getItem('theme') || 'light';
+          }
+        } catch (error) {
+          console.log('Error loading user theme, using localStorage fallback:', error);
+          currentTheme = localStorage.getItem('theme') || 'light';
+        }
+      } else {
+        // Not authenticated, use localStorage
+        currentTheme = localStorage.getItem('theme') || 'light';
+      }
+
+      body.setAttribute('data-theme', currentTheme);
+      updateThemeIcon(currentTheme);
+      updateSettingsThemeButtons(currentTheme);
+    }
+
+    // Update the theme icon based on current theme
+    function updateThemeIcon(theme) {
+      if (theme === 'dark') {
+        themeToggleIcon.setAttribute('d', moonIcon);
+        themeToggle.setAttribute('title', 'Switch to light mode');
+      } else {
+        themeToggleIcon.setAttribute('d', sunIcon);
+        themeToggle.setAttribute('title', 'Switch to dark mode');
+      }
+    }
+
+    // Update theme buttons in settings modal
+    function updateSettingsThemeButtons(theme) {
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        const btnTheme = btn.getAttribute('data-theme');
+        if (btnTheme === theme) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Save theme to backend
+    async function saveThemeToBackend(theme) {
+      if (!JWT_TOKEN) {
+        // Not authenticated, save to localStorage only
+        localStorage.setItem('theme', theme);
+        return;
+      }
+
+      try {
+        const headers = {
+          'Authorization': `Bearer ${JWT_TOKEN}`,
+          'Content-Type': 'application/json'
+        };
+
+        const response = await fetch('/api/user/theme/set/', {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify({ theme: theme })
+        });
+
+        if (response.ok) {
+          console.log('Theme saved to user profile:', theme);
+          // Also save to localStorage as backup
+          localStorage.setItem('theme', theme);
+
+          // Notify parent window about theme change
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({
+              type: 'THEME_CHANGED',
+              theme: theme
+            }, 'http://localhost:3000');
+          }
+        } else {
+          console.error('Failed to save theme to backend, saving to localStorage only');
+          localStorage.setItem('theme', theme);
+        }
+      } catch (error) {
+        console.error('Error saving theme to backend:', error);
+        localStorage.setItem('theme', theme);
+      }
+    }
+
+    // Toggle between light and dark themes
+    async function toggleTheme() {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      body.setAttribute('data-theme', newTheme);
+      updateThemeIcon(newTheme);
+      updateSettingsThemeButtons(newTheme);
+
+      // Save theme preference
+      await saveThemeToBackend(newTheme);
+    }
+
+    // Set theme from settings
+    async function setTheme(theme) {
+      body.setAttribute('data-theme', theme);
+      updateThemeIcon(theme);
+      updateSettingsThemeButtons(theme);
+
+      // Save theme preference
+      await saveThemeToBackend(theme);
+    }
+
+    // Add click event listener to theme toggle button
+    themeToggle.addEventListener('click', toggleTheme);
+
+    // Initialize theme on page load - will be called after JWT token is available
+    // initializeTheme(); // Called later in DOMContentLoaded after authentication
+
+    // Authentication Data Handling for iframe communication
+    function handleAuthenticationData() {
+      // Listen for messages from parent window (Next.js frontend)
+      window.addEventListener('message', function (event) {
+        // Verify origin for security
+        if (event.origin !== 'http://localhost:3000') {
+          return;
+        }
+
+        if (event.data && event.data.type === 'AUTH_TOKEN') {
+          console.log('Received authentication data from parent:', event.data);
+
+          // Update user display if user data is provided
+          if (event.data.user && event.data.user.full_name) {
+            updateUserDisplay(event.data.user.full_name);
+          }
+
+          // Store token for API calls
+          if (event.data.token) {
+            sessionStorage.setItem('iframe_auth_token', event.data.token);
+          }
+
+          // Apply theme from parent immediately if provided
+          if (event.data.theme) {
+            console.log('Applying theme from parent:', event.data.theme);
+            body.setAttribute('data-theme', event.data.theme);
+            updateThemeIcon(event.data.theme);
+            updateSettingsThemeButtons(event.data.theme);
+            // Store in localStorage as backup
+            localStorage.setItem('theme', event.data.theme);
+          }
+        }
+      });
+
+      // Notify parent that iframe is ready to receive auth data
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'IFRAME_READY'
+        }, 'http://localhost:3000');
+      }
+    }
+
+    // Function to update user display with authenticated user's name
+    function updateUserDisplay(fullName) {
+      const userNameElement = document.querySelector('#user-options-btn span');
+      if (userNameElement && fullName) {
+        userNameElement.textContent = fullName;
+      }
+    }
+
+    // Initialize authentication handling
+    handleAuthenticationData();
+
+    // Settings Modal Functions
+    function openSettings() {
+      const modal = document.getElementById('settings-modal');
+      const userOptions = document.getElementById('user-options');
+      const dropdownArrow = document.getElementById('user-dropdown-arrow');
+
+      // Hide user options dropdown
+      userOptions.classList.remove('opacity-100', 'scale-100');
+      userOptions.classList.add('opacity-0', 'scale-95');
+      dropdownArrow.classList.remove('rotate-180');
+      setTimeout(() => {
+        userOptions.classList.add('hidden');
+      }, 200);
+
+      // Show modal with animation
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.querySelector('.bg-container').classList.remove('scale-95');
+        modal.querySelector('.bg-container').classList.add('scale-100');
+      }, 0);
+
+      // Load current settings
+      loadCurrentSettings();
+    }
+
+    function closeSettings() {
+      const modal = document.getElementById('settings-modal');
+
+      // Hide modal with animation
+      modal.classList.add('opacity-0');
+      modal.querySelector('.bg-container').classList.remove('scale-100');
+      modal.querySelector('.bg-container').classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 200);
+    }
+
+    function loadCurrentSettings() {
+      // Load theme setting
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-theme') === currentTheme);
+      });
+
+      // Load notification settings
+      const emailNotifications = localStorage.getItem('emailNotifications') === 'true';
+      document.getElementById('emailNotifications').checked = emailNotifications;
+
+      // Load language setting
+      const currentLanguage = localStorage.getItem('language') || 'en';
+      document.getElementById('language').value = currentLanguage;
+    }
+
+    async function saveSettings() {
+      // Save theme setting
+      const activeThemeBtn = document.querySelector('.theme-btn.active');
+      if (activeThemeBtn) {
+        const theme = activeThemeBtn.getAttribute('data-theme');
+        document.body.setAttribute('data-theme', theme);
+        updateThemeIcon(theme);
+        updateSettingsThemeButtons(theme);
+        await saveThemeToBackend(theme);
+      }
+
+      // Save notification settings
+      const emailNotifications = document.getElementById('emailNotifications').checked;
+      localStorage.setItem('emailNotifications', emailNotifications);
+
+      // Save language setting
+      const language = document.getElementById('language').value;
+      localStorage.setItem('language', language);
+
+      // Close modal
+      closeSettings();
+
+      // Show success message
+      showNotification('Settings saved successfully!', 'success');
+    }
+
+    // Logout Function
+    function handleLogout() {
+      // Show custom confirmation dialog
+      showLogoutConfirmation();
+    }
+
+    // Custom logout confirmation modal
+    function showLogoutConfirmation() {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+      modal.innerHTML = `
+        <div class="bg-container rounded-2xl shadow-xl w-full max-w-md mx-4 transform scale-100 transition-transform duration-200">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-main mb-2">Confirm Logout</h3>
+            <p class="text-secondary mb-6">Are you sure you want to logout?</p>
+            <div class="flex justify-end space-x-3">
+              <button onclick="closeLogoutConfirmation()" class="px-4 py-2 text-sm text-main hover:bg-plugin-hover rounded-lg transition-colors duration-200">
+                Cancel
+              </button>
+              <button onclick="confirmLogout()" class="px-4 py-2 text-sm text-inverse rounded-lg transition-colors duration-200" style="background-color: var(--bg-btn)" onmouseover="this.style.backgroundColor = 'var(--bg-btn-hover)'" onmouseout="this.style.backgroundColor = 'var(--bg-btn)'">
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      window.logoutModal = modal;
+    }
+
+    function closeLogoutConfirmation() {
+      if (window.logoutModal) {
+        document.body.removeChild(window.logoutModal);
+        window.logoutModal = null;
+      }
+    }
+
+    async function confirmLogout() {
+      // Close the modal first
+      closeLogoutConfirmation();
+
+      try {
+        // Get token from URL parameter or sessionStorage (if passed from iframe parent)
+        const urlParams = new URLSearchParams(window.location.search);
+        let token = urlParams.get('token');
+
+        // Fallback to sessionStorage if not in URL
+        if (!token) {
+          token = sessionStorage.getItem('iframe_auth_token');
+        }
+
+        if (token) {
+          // Call Django logout API to invalidate the JWT token
+          const response = await fetch('/api/auth/logout/', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            }
+          });
+
+          if (!response.ok) {
+            console.warn('Logout API call failed, but continuing with logout');
+          }
+        }
+      } catch (error) {
+        console.error('Error calling logout API:', error);
+        // Continue with logout even if API call fails
+      }
+
+      // Clear any stored data
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Notify parent window (Next.js) about logout if in iframe
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'LOGOUT_SUCCESS'
+        }, 'http://localhost:3000');
+      }
+
+      // Redirect to Next.js login page
+      window.location.href = 'http://localhost:3000/';
+    }
+
+    // Notification Function
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-full ${type === 'success' ? 'bg-green-500 text-white' :
+        type === 'error' ? 'bg-red-500 text-white' :
+          'bg-blue-500 text-white'
+        }`;
+      notification.textContent = message;
+
+      document.body.appendChild(notification);
+
+      // Animate in
+      setTimeout(() => {
+        notification.classList.remove('translate-y-full');
+      }, 0);
+
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.classList.add('translate-y-full');
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    // Bottom User Panel Theme Support
+    function updateBottomUserPanelTheme() {
+      const panel = document.getElementById('bottom-user-panel');
+      const currentTheme = document.body.getAttribute('data-theme');
+
+      if (panel) {
+        if (currentTheme === 'dark') {
+          panel.style.background = 'rgba(31, 41, 55, 0.9)';
+          panel.style.borderColor = '#374151';
+          panel.querySelector('span').style.color = '#e5e7eb';
+        } else {
+          panel.style.background = 'rgba(255, 255, 255, 0.9)';
+          panel.style.borderColor = '#e5e7eb';
+          panel.querySelector('span').style.color = '#374151';
+        }
+      }
+    }
+
+    // Update bottom panel theme when theme changes
+    const originalSetTheme = setTheme;
+    setTheme = function (theme) {
+      originalSetTheme(theme);
+      updateBottomUserPanelTheme();
+    };
+
+    const originalToggleTheme = toggleTheme;
+    toggleTheme = function () {
+      originalToggleTheme();
+      updateBottomUserPanelTheme();
+    };
+
+    // Initialize bottom panel theme
+    document.addEventListener('DOMContentLoaded', function () {
+      updateBottomUserPanelTheme();
+    });
+
+    // Update immediately if DOM is already loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateBottomUserPanelTheme);
+    } else {
+      updateBottomUserPanelTheme();
+    }
+  </script>
+  <!-- Scripts -->
+  <script src="/static/chatbot/avatar/avatar.js"></script>
+</body>
+
+</html>

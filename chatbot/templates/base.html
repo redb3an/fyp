@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold text-gray-800">Chatbot</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'user_dashboard' %}" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+                    {% if user.is_superuser %}
+                    <a href="{% url 'admin_dashboard' %}" class="text-gray-600 hover:text-gray-900">Admin Dashboard</a>
+                    {% endif %}
+                    <span class="text-gray-600">{{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:text-red-800">Logout</button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="text-gray-600 hover:text-gray-900">Login</a>
+                    <a href="{% url 'register' %}"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            <p>&copy; {% now "Y" %} Chatbot. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

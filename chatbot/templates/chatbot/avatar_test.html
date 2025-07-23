@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar TTS Test</title>
+    <link rel="stylesheet" href="/static/chatbot/avatar/avatar.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+
+        .avatar-container {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1> Avatar TTS Test</h1>
+    <div class="avatar-container">
+        <img id="avatar-img" src="/static/chatbot/avatar/avatar_eyesopen_mouthclose.png" alt="Avatar" class="avatar">
+    </div>
+    <button onclick="testTTS()">Test TTS + Avatar</button>
+    <button onclick="testAvatar()">Test Avatar Only</button>
+    <button onclick="stopAll()">Stop All</button>
+    <div id="log" class="log"></div>
+
+    <script src="/static/chatbot/avatar/avatar.js"></script>
+    <script>
+        function log(msg) {
+            document.getElementById("log").innerHTML += new Date().toLocaleTimeString() + ": " + msg + "<br>";
+        }
+
+        function testTTS() {
+            if (!window.avatarController) { log(" Avatar controller missing!"); return; }
+            const text = "Hello! Testing avatar mouth synchronization with speech.";
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.4;
+            utterance.onstart = () => { log(" TTS Started - Avatar talking"); window.avatarController.startTalking(); };
+            utterance.onend = () => { log(" TTS Ended - Avatar stops"); window.avatarController.stopTalking(); };
+            speechSynthesis.speak(utterance);
+            log(" Starting TTS test...");
+        }
+
+        function testAvatar() {
+            if (!window.avatarController) { log(" Avatar controller missing!"); return; }
+            log(" Testing avatar animation...");
+            window.avatarController.startTalking();
+            setTimeout(() => { window.avatarController.stopTalking(); log(" Avatar test done"); }, 3000);
+        }
+
+        function stopAll() {
+            speechSynthesis.cancel();
+            if (window.avatarController) window.avatarController.stopTalking();
+            log(" Stopped all");
+        }
+
+        setTimeout(() => {
+            log(window.avatarController ? " Avatar controller loaded" : " Avatar controller missing");
+        }, 1000);
+    </script>
+</body>
+
+</html>
